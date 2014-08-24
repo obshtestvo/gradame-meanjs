@@ -52,6 +52,11 @@ app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         templateUrl: '/views/signals.show.html',
         controller: 'SignalsShowCtrl'
       })
+      .state('user',{
+        url:'/user/:user_id',
+        templateUrl:'/views/users.html',
+        controller:'UserCtrl'
+      })
       .state("otherwise", { url : '/'});
 
     //$locationProvider.html5Mode(true);

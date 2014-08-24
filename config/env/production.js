@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-	db: 'mongodb://localhost/grada-new'
+	db: 'mongodb://dev.grada.me/grada-new'
 	/*
 	facebook: {
 		clientID: 'APP_ID',

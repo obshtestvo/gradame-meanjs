@@ -18,7 +18,6 @@ app.controller('AuthCtrl',
 
     $scope.register = function () {
       Auth.register($scope.user);
-
     };
 
     $scope.logout = Auth.logout;

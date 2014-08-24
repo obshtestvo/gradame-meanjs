@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-	db: 'mongodb://localhost/grada-new-dev',
+	db: 'mongodb://dev.grada.me/grada-new-dev',
 	app: {
 		title: 'Grada.me - Development Environment'
 	},

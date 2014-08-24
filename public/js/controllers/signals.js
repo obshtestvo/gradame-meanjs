@@ -109,6 +109,10 @@ app.controller('SignalsCtrl', function ($scope, $location, $http, $timeout, Sign
       params["status"] = $scope.filter.status;
     }
 
+    if($scope.filter.user_id != ""){
+      
+    }
+
     Signal.query(params).$promise.then(function(signals){
       //console.log(signals);
       for(var i in signals){
