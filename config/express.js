@@ -9,6 +9,7 @@ var express = require('express'),
 	consolidate = require('consolidate'),
 	swig = require('swig'),
 	path = require('path'),
+  less = require('less-middleware'),
 	utilities = require('./utilities');
 
 module.exports = function(db) {
@@ -95,8 +96,6 @@ module.exports = function(db) {
 	// Enable jsonp
 	app.enable('jsonp callback');
 
-	
-
 	// use passport
 	app.use(passport.initialize());
 	//app.use(passport.session());
@@ -106,6 +105,9 @@ module.exports = function(db) {
 
 	// routes should be at the last
 	app.use(app.router);
+
+  // use less middleware
+  app.use(less(config.root + '/public'));
 
 	// Setting the app router and static folder
 	app.use(express.static(config.root + '/public'));
