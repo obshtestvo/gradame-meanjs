@@ -1,25 +1,38 @@
 'use strict';
 
+/**
+ * Module dependencies.
+ */
 var passport = require('passport'),
-  LocalStrategy = require('passport-local').Strategy,
-  User = require('mongoose').model('User');
-
+	LocalStrategy = require('passport-local').Strategy,
+	User = require('mongoose').model('User');
 
 module.exports = function() {
-  // Use local strategy
-  passport.serializeUser(function(user, done) {
-        done(null, user.id);
-    });
+	// Use local strategy
+	passport.use(new LocalStrategy({
+			usernameField: 'username',
+			passwordField: 'password'
+		},
+		function(username, password, done) {
+			User.findOne({
+				username: username
+			}, function(err, user) {
+				if (err) {
+					return done(err);
+				}
+				if (!user) {
+					return done(null, false, {
+						message: 'Unknown user'
+					});
+				}
+				if (!user.authenticate(password)) {
+					return done(null, false, {
+						message: 'Invalid password'
+					});
+				}
 
-    // used to deserialize the user
-    passport.deserializeUser(function(id, done) {
-        User.findById(id, function(err, user) {
-            done(err, user);
-        });
-    });
-
-
-    // passport-local-mongoose
-  passport.use(User.createStrategy());
-
+				return done(null, user);
+			});
+		}
+	));
 };
