@@ -106,7 +106,7 @@ module.exports = function(db) {
     app.use(function(req,res,next){
       var token = req.headers['x-token'];
       if (token != "null" && token != undefined) {
-        var user = jwt.decode(token, 'kur');
+        var user = jwt.decode(token, config.jwtSecret);
         req.user = User.find({email: user.email});
       }
      return next();

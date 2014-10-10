@@ -5,6 +5,7 @@
  */
 var _ = require('lodash'),
 	errorHandler = require('../errors'),
+  config = require('../../../config/config'),
 	mongoose = require('mongoose'),
 	passport = require('passport'),
   jwt = require('jwt-simple'),
@@ -64,7 +65,7 @@ exports.signin = function(req, res, next) {
 					res.status(400).send(err);
 				} else {
           req.user = user;
-          res.setHeader('x-token', jwt.encode(req.user, 'kur'));
+          res.setHeader('x-token', jwt.encode(req.user, config.jwtSecret));
           res.jsonp(user);
 				}
 			});
