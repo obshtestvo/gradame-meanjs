@@ -18,6 +18,7 @@ var express = require('express'),
 	flash = require('connect-flash'),
 	config = require('./config'),
 	consolidate = require('consolidate'),
+    jwt  = require('jwt-simple'),
 	path = require('path');
 
 module.exports = function(db) {
@@ -100,20 +101,18 @@ module.exports = function(db) {
 	// CookieParser should be above session
 	app.use(cookieParser());
 
-	// Express MongoDB session storage
-	app.use(session({
-		saveUninitialized: true,
-		resave: true,
-		secret: config.sessionSecret,
-		store: new mongoStore({
-			db: db.connection.db,
-			collection: config.sessionCollection
-		})
-	}));
+    //FIXME This should be extracted in some passport module
+	var User = require('mongoose').model('User');
+    app.use(function(req,res,next){
+      var token = req.headers['x-token'];
+      if (token != "null" && token != undefined) {
+        var user = jwt.decode(token, 'kur');
+        req.user = User.find({email: user.email});
+      }
+     return next();
+    })
 
-	// use passport session
 	app.use(passport.initialize());
-	app.use(passport.session());
 
   // connect flash for flash messages
   // app.use(flash());

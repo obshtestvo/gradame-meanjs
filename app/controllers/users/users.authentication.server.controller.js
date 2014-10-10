@@ -7,6 +7,7 @@ var _ = require('lodash'),
 	errorHandler = require('../errors'),
 	mongoose = require('mongoose'),
 	passport = require('passport'),
+  jwt = require('jwt-simple'),
 	User = mongoose.model('User');
 
 /**
@@ -62,7 +63,9 @@ exports.signin = function(req, res, next) {
 				if (err) {
 					res.status(400).send(err);
 				} else {
-					res.jsonp(user);
+          req.user = user;
+          res.setHeader('x-token', jwt.encode(req.user, 'kur'));
+          res.jsonp(user);
 				}
 			});
 		}

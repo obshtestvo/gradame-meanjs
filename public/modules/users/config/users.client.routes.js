@@ -25,6 +25,14 @@ angular.module('users').config(['$stateProvider',
 			url: '/signin',
 			templateUrl: 'modules/users/views/authentication/signin.client.view.html'
 		}).
+    state('signout', {
+      url: '/signout',
+      controller: ['$scope', '$localStorage', 'Authentication', function($scope, $localStorage, Authentication) {
+        $localStorage.user = null;
+        $localStorage.token = null;
+        Authentication.user = null;
+      }]
+    }).
 		state('forgot', {
 			url: '/password/forgot',
 			templateUrl: 'modules/users/views/password/forgot-password.client.view.html'

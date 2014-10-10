@@ -7,20 +7,18 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider', '$httpPro
 
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
 
-    /*
     $httpProvider.interceptors.push(['TokenHandler', function(TokenHandler) {
       return {
         request: function(config) {
           // add token unless we are requesting an external site
           if (!config.url.match(/^http/)) {
-            config.headers['token'] = TokenHandler.get();
+            config.headers['x-token'] = TokenHandler.get();
           }
 
           return config;
         }
       }
     }]);
-   */
 
     $stateProvider
       .state('home', {
