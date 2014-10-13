@@ -105,7 +105,7 @@
 		it('$scope.signup() should fail to register with duplicate Username', function() {
 			// Test expected POST request
 			$httpBackend.when('POST', '/auth/signup').respond(400, {
-				'message': 'Username already exists'
+				'message': 'User already exists'
 			});
 
 			scope.signup();
