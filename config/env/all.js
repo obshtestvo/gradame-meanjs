@@ -29,7 +29,8 @@ module.exports = {
         'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
         'public/lib/angular-google-maps/dist/angular-google-maps.js',
         'public/vendor/angular-file/angular-file.js',
-        'public/lib/ngstorage/ngStorage.js'
+        'public/lib/ngstorage/ngStorage.js',
+        'public/lib/js-md5/js/md5.js'
       ]
     },
     css: [
