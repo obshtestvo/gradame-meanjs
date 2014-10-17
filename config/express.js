@@ -3,49 +3,47 @@
 /**
  * Module dependencies.
  */
-var passport = require('passport'),
-  config = require('./config'),
-  consolidate = require('consolidate'),
-  swig = require('swig'),
-  path = require('path'),
-  utilities = require('./utilities');
-
 var express = require('express'),
-  morgan = require('morgan'),
-  bodyParser = require('body-parser'),
-  session = require('express-session'),
-  compress = require('compression'),
-  methodOverride = require('method-override'),
-  cookieParser = require('cookie-parser'),
-  helmet = require('helmet'),
-  passport = require('passport'),
-  flash = require('connect-flash'),
-  less = require('less-middleware')
+	morgan = require('morgan'),
+	bodyParser = require('body-parser'),
+	session = require('express-session'),
+	compress = require('compression'),
+	methodOverride = require('method-override'),
+	cookieParser = require('cookie-parser'),
+	helmet = require('helmet'),
+	passport = require('passport'),
+	mongoStore = require('connect-mongo')({
+		session: session
+	}),
+	flash = require('connect-flash'),
+	config = require('./config'),
+	consolidate = require('consolidate'),
+	path = require('path');
 
 module.exports = function(db) {
   // Initialize express app
   var app = express();
 
-  // Initialize models
-  utilities.walk('./app/models', /(.*)\.(js$|coffee$)/).forEach(function(modelPath) {
-    require(path.resolve(modelPath));
-  });
+	// Globbing model files
+	config.getGlobbedFiles('./app/models/**/*.js').forEach(function(modelPath) {
+		require(path.resolve(modelPath));
+	});
 
-  // Setting the environment locals
-  app.locals.title = config.app.title
-  app.locals.description = config.app.description
-  app.locals.keywords = config.app.keywords
-//    app.locals.facebookAppId: config.facebook.clientID,
-//    app.locals.modulesJSFiles: utilities.walk('./public/modules', /(.*)\.(js)/, /(.*)\.(spec.js)/, './public'),
-//    app.locals.modulesCSSFiles: utilities.walk('./public/modules', /(.*)\.(css)/, null, './public')
+	// Setting application local variables
+	app.locals.title = config.app.title;
+	app.locals.description = config.app.description;
+	app.locals.keywords = config.app.keywords;
+	app.locals.facebookAppId = config.facebook.clientID;
+	app.locals.jsFiles = config.getJavaScriptAssets();
+	app.locals.cssFiles = config.getCSSAssets();
 
-  // cross domain support
+  // Cross domain support
   app.use(function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
 
-    // intercept OPTIONS method
+    // Intercept OPTIONS method
     if ('OPTIONS' == req.method) {
       res.send(200);
     }
@@ -71,13 +69,12 @@ module.exports = function(db) {
   // Showing stack errors
   app.set('showStackError', true);
 
-  // Set swig as the template engine
-  app.engine('html', consolidate["ejs"]);
-  app.engine('jade', consolidate[config.templateEngine]);
+	// Set swig as the template engine
+	app.engine('server.view.html', consolidate[config.templateEngine]);
 
-  // Set views path and view engine
-  app.set('view engine', 'html');
-  app.set('views', config.root + '/app/views');
+	// Set views path and view engine
+	app.set('view engine', 'server.view.html');
+	app.set('views', './app/views');
 
   // Environment dependent middleware
   if (process.env.NODE_ENV === 'development') {
@@ -100,51 +97,26 @@ module.exports = function(db) {
   // Enable jsonp
   app.enable('jsonp callback');
 
+	// CookieParser should be above session
+	app.use(cookieParser());
 
+	// Express MongoDB session storage
+	app.use(session({
+		saveUninitialized: true,
+		resave: true,
+		secret: config.sessionSecret,
+		store: new mongoStore({
+			db: db.connection.db,
+			collection: config.sessionCollection
+		})
+	}));
 
-  // use passport
-  app.use(passport.initialize());
-  //app.use(passport.session());
-
-  // inject user if token
-  // todo move this to strategy or use 3rd party lib
-  var User = db.model("User");
-  var Token = db.model("Token");
-  app.use(function(req,res,next){
-
-    //console.log(req.headers.token);
-    if(!req.headers.token){
-      return next();
-    }
-
-    var incomingToken = req.headers.token;
-      console.log('incomingToken: ' + incomingToken);
-      var decoded = User.decode(incomingToken);
-      //Now do a lookup on that email in mongodb ... if exists it's a real user
-      if (decoded && decoded.email) {
-          User.findUser(decoded.email, incomingToken, function(err, user) {
-              if (err) {
-                  console.log({error: 'Issue finding user.',
-                        msg: err});
-                  return next();
-              } else {
-                  if (Token.hasExpired(user.token.date_created)) {
-                      console.log("Token expired...TODO: Add renew token funcitionality.");
-                      return next();
-                  } else {
-                      req.user = user;
-                      return next();
-                  }
-              }
-          });
-      }
-  })
+	// use passport session
+	app.use(passport.initialize());
+	app.use(passport.session());
 
   // connect flash for flash messages
-  //app.use(flash());
-
-  // use less middleware
-  app.use(less(config.root + '/public'));
+  // app.use(flash());
 
   // Use helmet to secure Express headers
   app.use(helmet.xframe());
@@ -153,13 +125,13 @@ module.exports = function(db) {
   app.use(helmet.ienoopen());
   app.disable('x-powered-by');
 
-  // Load Routes
-  utilities.walk('./app/routes', /(.*)\.(js$|coffee$)/).forEach(function(routePath) {
-    require(path.resolve(routePath))(app);
-  });
-
   // Setting the app router and static folder
-  app.use(express.static(config.root + '/public'));
+	app.use(express.static(path.resolve('./public')));
+
+	// Globbing routing files
+	config.getGlobbedFiles('./app/routes/**/*.js').forEach(function(routePath) {
+		require(path.resolve(routePath))(app);
+	});
 
   // Assume 'not found' in the error msgs is a 404. this is somewhat silly, but valid, you can do whatever you like, set properties, use instanceof etc.
   app.use(function(err, req, res, next) {
@@ -170,14 +142,14 @@ module.exports = function(db) {
     console.error(err.stack);
 
     // Error page
-    res.status(500).render('500.jade', {
+    res.status(500).render('500', {
       error: err.stack
     });
   });
 
   // Assume 404 since no middleware responded
   app.use(function(req, res) {
-    res.status(404).render('404.jade', {
+    res.status(404).render('404', {
       url: req.originalUrl,
       error: 'Not Found'
     });

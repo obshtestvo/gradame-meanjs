@@ -2,16 +2,19 @@
   "name": "grada.me",
   "version": "0.0.1",
   "dependencies": {
-    "bootstrap": "latest",
-    "font-awesome": "latest",
-    "jquery": "latest",
-    "angular": "latest",
-    "angular-ui-router" : "latest",
-    "angular-resource": "latest",
-    "angular-google-maps": "latest",
-    "ngstorage": "latest",
+		"bootstrap": "~3",
+    "font-awesome": "~4.2.0",
     "lodash": "latest",
     "q" : "~1.x",
-    "angular-mocks":"latest"
+    "jquery": "~2",
+		"angular": "~1.2",
+		"angular-resource": "~1.2",
+		"angular-animate": "~1.2",
+		"angular-mocks": "~1.2",
+		"angular-bootstrap": "~0.11.0",
+		"angular-ui-utils": "~0.1.1",
+		"angular-ui-router": "~0.2.10",
+    "angular-google-maps": "~1.1.2",
+    "ngstorage": "latest"
   }
 }

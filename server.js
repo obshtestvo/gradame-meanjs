@@ -1,22 +1,23 @@
 'use strict';
-
-/**
- * First we set the node enviornment variable if not set before
- */
-process.env.NODE_ENV = process.env.NODE_ENV || 'development';
-
 /**
  * Module dependencies.
  */
-var config = require('./config/config'),
-  mongoose = require('mongoose');
+var init = require('./config/init')(),
+	config = require('./config/config'),
+	mongoose = require('mongoose');
 
 /**
  * Main application entry file.
  * Please note that the order of loading is important.
  */
+
 // Bootstrap db connection
-var db = mongoose.connect(config.db);
+var db = mongoose.connect(config.db, function(err) {
+	if (err) {
+		console.error('\x1b[31m', 'Could not connect to MongoDB!');
+		console.log(err);
+	}
+});
 
 // Init the express application
 var app = require('./config/express')(db);
@@ -31,4 +32,4 @@ app.listen(config.port);
 exports = module.exports = app;
 
 // Logging initialization
-console.log('Express app started on port ' + config.port);
+console.log('MEAN.JS application started on port ' + config.port);
