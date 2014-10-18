@@ -21,13 +21,14 @@ module.exports = {
         'public/lib/jquery/dist/jquery.js',
         'public/lib/angular/angular.js',
         'public/lib/angular-resource/angular-resource.js',
-        'public/lib/angular-animate/angular-animate.js',
+        'public/lib/angularjs-geolocation/src/geolocation.js',
         'public/lib/angular-ui-router/release/angular-ui-router.js',
         'public/lib/angular-ui-utils/ui-utils.js',
         'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
         'public/lib/angular-google-maps/dist/angular-google-maps.js',
         'public/vendor/angular-file/angular-file.js',
         'public/lib/ngstorage/ngStorage.js',
+        'public/lib/angular-animate/angular-animate.js',
         'public/lib/js-md5/js/md5.js'
       ]
     },
