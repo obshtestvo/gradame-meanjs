@@ -1,7 +1,6 @@
 'use strict';
 
-
-angular.module('core').controller('SignalsNewCtrl', function ($scope, $location, $http, $timeout, Signal, Maps) {
+angular.module('signals').controller('SignalsNewCtrl', function ($scope, $location, $http, $timeout, Signal, Maps) {
 
   $scope.signal = new Signal();
 

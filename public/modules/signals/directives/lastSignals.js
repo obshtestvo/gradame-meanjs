@@ -1,7 +1,7 @@
 angular.module('core').directive('lastSignals', function () {
   return {
     restrict: 'A',
-    templateUrl:'modules/core/views/signals.last.client.view.html',
+    templateUrl:'modules/signals/views/signals.last.client.view.html',
     controller: ['$scope', 'Signal', function($scope, Signal) {
       $scope.signals = Signal.query({limit: 3},
         function(data) {

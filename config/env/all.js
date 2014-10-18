@@ -35,18 +35,6 @@ module.exports = {
       'public/modules/**/css/*.css'
     ],
     js: [
-      "public/js/app.js",
-      "public/js/services/token.js",
-      "public/js/services/auth.js",
-      "public/js/services/signal.js",
-      "public/js/services/maps.js",
-      "public/js/controllers/signals.js",
-      "public/js/controllers/signals.new.js",
-      "public/js/controllers/signals.view.js",
-      "public/js/controllers/nav.js",
-      "public/js/controllers/auth.js",
-      "public/js/directives/lastSignals.js",
-
       'public/config.js',
       'public/application.js',
 

@@ -2,11 +2,6 @@
 
 angular.module('core').config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
   function ($stateProvider, $urlRouterProvider, $httpProvider) {
-
-    $httpProvider.defaults.useXDomain = true;
-
-    delete $httpProvider.defaults.headers.common['X-Requested-With'];
-
     /*
     $httpProvider.interceptors.push(['TokenHandler', function(TokenHandler) {
       return {
@@ -30,21 +25,6 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider', '$httpPro
       .state('home-dash', {
         url : '/',
         templateUrl: 'modules/core/views/home.client.view.html'
-      })
-      .state('signals', {
-        url : '/signals',
-        templateUrl: 'modules/core/views/signals.client.view.html',
-        controller: 'SignalsCtrl'
-      })
-      .state('signals-new', {
-        url : '/signals/new',
-        templateUrl: 'modules/core/views/signals.new.client.view.html',
-        controller: 'SignalsNewCtrl'
-      })
-      .state('signals-view', {
-        url : '/signals/{signalId}',
-        templateUrl: 'modules/core/views/signals.view.client.view.html',
-        controller: 'SignalsViewCtrl'
       })
       .state("otherwise", { url : '/'});
 

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('core').controller('SignalsViewCtrl', ['$scope', '$stateParams', 'Signal', function($scope, $stateParams, Signal) {
+angular.module('signals').controller('SignalsViewCtrl', ['$scope', '$stateParams', 'Signal', function($scope, $stateParams, Signal) {
   $scope.load = function() {
     Signal.get({ _id: $stateParams.signalId }, function(signal) {
       $scope.signal = signal
