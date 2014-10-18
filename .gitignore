@@ -3,5 +3,6 @@
 node_modules
 public/lib
 public/img/signals/
+public/modules/core/css/core.css.map
 .sass-cache
 *.css
