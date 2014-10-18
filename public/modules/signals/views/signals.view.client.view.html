@@ -1,11 +1,11 @@
 <div class="row signals-view">
   <div class="col-xs-12 col-sm-4 left-pane">
     <h3>{{ signal.type }}</h3>
-    <div>{{ signal.date_created }}</div>
-    <div class="btn-group btn-group-justified">
-      <a class="btn btn-sm btn-default active">отворен</a>
-      <a class="btn btn-sm btn-warning">работи се</a>
-      <a class="btn btn-sm btn-success">решен</a>
+    <div class="timestamp">Подаден на {{ signal.date_created | date:'dd MMM yyyy HH:mm' }}</div>
+    <div class="status">
+      <div class="open" ng-class="(signal.status == 0) ? 'active' : ''">отворен</div>
+      <div class="assigned" ng-class="(signal.status == 1) ? 'active' : ''">работи се</div>
+      <div class="resolved" ng-class="(signal.status == 2) ? 'active' : ''">решен</div>
     </div>
     <div>
       {{ signal.address }}<br>

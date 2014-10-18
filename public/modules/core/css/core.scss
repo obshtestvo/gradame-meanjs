@@ -7,38 +7,29 @@
 // Bootstrap (customizing bootstrap variables should be done before importing bootstrap)
 
 $font-family-sans-serif: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-$headings-font-weight: 600;
+$headings-font-weight:  600;
+$navbar-margin-bottom:  0;
 
-@import "../../../lib/bootstrap-sass-official/assets/stylesheets/bootstrap";
+$brand-color: #ED6A51;
 
-// ----------------------------------------------------------------------------------------
 // Other variables
 
-$panel-bg: #fcfbf9;
-$text-color-light: #999999;
+$panel-bg:          #fcfbf9;
+$text-color-light:  #999999;
+
+@import "../../../lib/bootstrap-sass-official/assets/stylesheets/bootstrap";
 
 // ----------------------------------------------------------------------------------------
 // CSS rules
 
 body {
   -webkit-font-smoothing: antialiased;
-  background: #fcfbf9 url("../img/brand/bg.png") no-repeat bottom left fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  padding-top: 70px;
-}
-
-.container-fluid {
-  padding-right: 20px;
-  padding-left: 20px;
+  padding-top: $navbar-height;
 }
 
 .navbar {
   background: #fcfbf9;
   /*border-color: #FCFBF9; */
-  /*box-shadow: 0 10px 15px rgba(252, 251, 249, 1.0); /* TODO: find better way to separate visually fixed navbar */
 }
 
 .navbar-brand img {
@@ -74,11 +65,6 @@ footer {
   height: 362px;
 }
 
-.map-container {
-  margin-top: 25px;
-  margin-bottom: 25px;
-}
-
 .map-addon {
   padding: 5px 10px;
   background: #e5e3df;
@@ -91,14 +77,6 @@ footer {
   margin-top: 25px;
   margin-bottom: 10px;
 }
-
-/*.container {
- *  background: white;
- *  border: 1px solid #D5D0BD;
- *  border-color: #E5E3DF;
- *  padding-right: 25px;
- *  padding-left: 25px;
- *} */
 
 .search-pane {
   margin-top: 25px;
@@ -143,6 +121,7 @@ $action-block-comment-color: #999999;
 }
 
 .signals-view {
+  margin-top: 30px;
   border: 1px solid #cccccc;
   border-radius: 4px;
   .left-pane {
@@ -153,7 +132,43 @@ $action-block-comment-color: #999999;
     background: $panel-bg;
     border-radius: 4px 0px 0px 4px;
     > div {
-      margin-top: 20px;
+      margin-top: 15px;
+    }
+    .timestamp {
+      font-size: $font-size-small;
+      color: $text-color-light;
+      margin-top: 0;
+    }
+    .status {
+      $status-open-color: $brand-color;
+      $status-assigned-color: #f2c42e;
+      $status-resolved-color: #84ba3b;
+      @include clearfix();
+      & > div {
+        @extend .pull-left;
+        margin-left: -1px;
+        width: 33.33%;
+        text-align: center;
+        border: 1px solid #CCC;
+        line-height: 28px;
+        color: $text-color-light;
+        &.active {
+          color: white;
+          font-weight: bold;
+          &.open {
+            background: $status-open-color;
+            border-color: $status-open-color;
+          }
+          &.assigned {
+            background: $status-assigned-color;
+            border-color: $status-assigned-color;
+          }
+          &.resolved {
+            background: $status-resolved-color;
+            border-color: $status-resolved-color;
+          }
+        }
+      }
     }
   }
   .right-pane {
@@ -234,17 +249,25 @@ $action-block-comment-color: #999999;
   margin-top: 10px;
 }
 
+#page-home {
+  margin-top: 20px;
+}
+
+#page-signal-new {
+  margin-top: 30px;
+}
+
 #page-signals {
   .sidebar {
-    width: 350px;
     position: fixed;
-    top: 50px;
+    top: $navbar-height;
     left: 0;
+    right: 0;
     bottom: 0;
+    z-index: 1;
+    width: 350px;
     background: white;
     overflow-y: auto;
-    z-index: 1;
-    border-right: 1px solid #e5e3df;
   }
   .map-container {
     position: fixed;
@@ -254,7 +277,6 @@ $action-block-comment-color: #999999;
     bottom: 0;
     heighth: 100%;
     z-index: 0;
-    margin: 0;
   }
   .angular-google-map, .angular-google-map-container {
     width: 100%;
@@ -282,6 +304,17 @@ $action-block-comment-color: #999999;
   margin-bottom: 5px;
   &:last-child {
     margin-bottom: 0;
+  }
+}
+
+@media (max-width: $screen-xs-min) {
+  #page-signals {
+    .sidebar {
+      width: 100%;
+    }
+    .map-container {
+      left: 0;
+    }
   }
 }
 
