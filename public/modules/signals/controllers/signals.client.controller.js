@@ -47,6 +47,7 @@ angular.module('signals').controller('SignalsCtrl', ['$scope', '$location', '$ht
         })
 
         $scope.markers = markers;
+        $scope.signals = signals;
       });
     }
 
