@@ -27,9 +27,8 @@ angular.module('signals').controller('SignalsCtrl', ['$scope', '$location', '$ht
     };
 
     function reloadSignals() {
-      if (!$scope.params.bounds || $scope.params.bounds == "") {
+      if (_.isEmpty($scope.params.bounds))
         return;
-      }
 
       Signal.query($scope.params, function(signals) {
         _.each(signals, function(sig) {
@@ -67,34 +66,55 @@ angular.module('signals').controller('SignalsCtrl', ['$scope', '$location', '$ht
     }
 
     $scope.map = {
-        control: {},
-        options: {
-              streetViewControl: false,
-              panControl: false,
-              maxZoom: 20,
-              minZoom: 3
-          },
-          center: {
-            latitude: 42.7,
-            longitude: 23.3
-          },
-        zoom: 15,
-        events: {
-          idle: function(map, eventName, originalEventArgs) {
-            $scope.params.bounds = map.getBounds().toString();
-            var center = map.getCenter();
+      control: {},
+      options: {
+        streetViewControl: false,
+        panControl: false,
+        maxZoom: 20,
+        minZoom: 3
+      },
+      center: {
+        latitude: 42.7,
+        longitude: 23.3
+      },
+      zoom: 15,
+      events: {
+        idle: function(map, eventName, originalEventArgs) {
+          $scope.params.bounds = map.getBounds().toString();
+          var center = map.getCenter();
 
-            var coords = {
-              latitude: center.lat(),
-              longitude: center.lng()
-            }
+          var coords = {
+            latitude: center.lat(),
+            longitude: center.lng()
           }
         }
+      }
     };
 
     geolocation.getLocation().then(function(data){
       $scope.map.center = data.coords;
       $scope.currentMarker.coords = data.coords;
+    });
+
+    $scope.autocomplete = {
+      details: {},
+      options: {
+        country: 'bg'
+      }
+    }
+
+    $scope.$watch('autocomplete.details', function(details) {
+      if (_.isEmpty(details))
+        return;
+
+      var location = details.geometry.location;
+
+      var coords = {
+        latitude: location.lat(),
+        longitude: location.lng()
+      }
+
+      $scope.map.center = coords;
     });
   }
 ]);

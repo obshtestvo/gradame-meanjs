@@ -5,7 +5,8 @@
     <div class="filter-pane">
       <form role="form">
         <div class="form-group">
-          <input type="text" class="form-control input-sm address" placeholder="Намери подадени сигнали по адрес" id="autocomplete"/>
+          <input type="text" class="form-control input-sm address" placeholder="Намери подадени сигнали по адрес"
+                 ng-autocomplete ng-model="autocomplete.address" details="autocomplete.details" options="autocomplete.options" />
         </div>
         <div class="form-group form-inline">
           <select class="form-control input-sm" ng-model="filter.type">

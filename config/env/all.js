@@ -29,7 +29,8 @@ module.exports = {
         'public/vendor/angular-file/angular-file.js',
         'public/lib/ngstorage/ngStorage.js',
         'public/lib/angular-animate/angular-animate.js',
-        'public/lib/js-md5/js/md5.js'
+        'public/lib/js-md5/js/md5.js',
+        'public/lib/ngAutocomplete/src/ngAutocomplete.js'
       ]
     },
     css: [
