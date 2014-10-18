@@ -9,6 +9,9 @@
 $font-family-sans-serif: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 $headings-font-weight:  600;
 $navbar-margin-bottom:  0;
+
+$brand-color: #ED6A51;
+
 // Other variables
 
 $panel-bg:          #fcfbf9;
@@ -129,12 +132,43 @@ $action-block-comment-color: #999999;
     background: $panel-bg;
     border-radius: 4px 0px 0px 4px;
     > div {
-      margin-top: 20px;
+      margin-top: 15px;
     }
     .timestamp {
       font-size: $font-size-small;
       color: $text-color-light;
       margin-top: 0;
+    }
+    .status {
+      $status-open-color: $brand-color;
+      $status-assigned-color: #f2c42e;
+      $status-resolved-color: #84ba3b;
+      @include clearfix();
+      & > div {
+        @extend .pull-left;
+        margin-left: -1px;
+        width: 33.33%;
+        text-align: center;
+        border: 1px solid #CCC;
+        line-height: 28px;
+        color: $text-color-light;
+        &.active {
+          color: white;
+          font-weight: bold;
+          &.open {
+            background: $status-open-color;
+            border-color: $status-open-color;
+          }
+          &.assigned {
+            background: $status-assigned-color;
+            border-color: $status-assigned-color;
+          }
+          &.resolved {
+            background: $status-resolved-color;
+            border-color: $status-resolved-color;
+          }
+        }
+      }
     }
   }
   .right-pane {
