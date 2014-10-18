@@ -131,6 +131,11 @@ $action-block-comment-color: #999999;
     > div {
       margin-top: 20px;
     }
+    .timestamp {
+      font-size: $font-size-small;
+      color: $text-color-light;
+      margin-top: 0;
+    }
   }
   .right-pane {
     padding: 20px;

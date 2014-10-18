@@ -1,7 +1,7 @@
 <div class="row signals-view">
   <div class="col-xs-12 col-sm-4 left-pane">
     <h3>{{ signal.type }}</h3>
-    <div>{{ signal.date_created }}</div>
+    <div class="timestamp">Подаден на {{ signal.date_created | date:'dd MMM yyyy HH:mm' }}</div>
     <div class="btn-group btn-group-justified">
       <a class="btn btn-sm btn-default active">отворен</a>
       <a class="btn btn-sm btn-warning">работи се</a>
