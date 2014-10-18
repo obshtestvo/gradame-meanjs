@@ -45,6 +45,13 @@ angular.module('core').factory('Signal', ['$resource', function($resource) {
       params: {
         collectionRoute: 'near'
       }
+    },
+    mine: {
+      method: 'GET',
+      isArray: true,
+      params: {
+        collectionRoute: 'mine'
+      }
     }
   }
 

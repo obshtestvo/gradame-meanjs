@@ -1,0 +1,23 @@
+<div class="col-xs-12" ng-if="signals">
+	<h3>My Signals</h3>
+	<ul class="media-list signals-list" >
+		<li class="media" data-ng-repeat="signal in signals">
+		<a href="#!/signals/{{ signal._id }}" class="pull-left thumbnail">
+		  <img ng-if="signal.images[0]" data-ng-src="/img/signals/{{ signal._id + '/' + signal.images[0] }}" class="media-object">
+		</a>
+		<div class="media-body">
+		  <address>
+		    <b>{{ signal.type }}</b><br/>
+		    <small>{{ signal.address }}</small><br/>
+		    <small>{{ signal.date_created }}</small>
+		  </address>
+		</div>
+		<!--
+		сигнализирано от <a href="/users/{{ signal.author }}">authorname: {{ signal.authorName }}</a><br/>
+		status:     {{ signal.status }}
+		<br/>
+		<a href="{{ signal._id }}">повече</a>
+		-->
+		</li>
+	</ul>
+</div>

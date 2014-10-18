@@ -172,7 +172,39 @@ exports.list = function(req, res) {
   });
 };
 
+exports.mine = function(req, res) {
+  
+  var queryJson = {};
 
+  queryJson['author'] = req.user._id;
+  console.log(req.user._id);
+
+  if(req.query){
+
+    
+    if(req.query.type){
+      queryJson['type'] = req.query.type;
+    }
+    if(req.query.status){
+      queryJson['status'] = req.query.status;
+    }
+
+  }
+
+
+  Signal.find(queryJson).sort('-date_created').limit(req.query.limit ? req.query.limit : 0).populate('user', 'displayName').exec(function(err, signals) {
+    if (err) {
+      res.jsonp('error', {
+        status: 500,
+        err: err
+      });
+    } else {
+
+      res.jsonp(signals);
+
+    }
+  });
+};
 
 
 exports.findNear = function(req, res) {
