@@ -55,7 +55,8 @@ module.exports = function(grunt) {
     sass: {
       dist: {
         files: {
-          'public/modules/core/css/core.css' : 'public/modules/core/css/core.scss'
+          'public/modules/core/css/core.css' : 'public/modules/core/css/core.scss',
+          'public/modules/users/css/users.css' : 'public/modules/users/css/users.scss'
         }
       }
     },
