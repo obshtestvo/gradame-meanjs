@@ -16,6 +16,7 @@
     "angular-google-maps": "~1.1.2",
     "ngstorage": "latest",
     "js-md5": "latest",
-    "bootstrap-sass-official": "v3.2.0+2"
+    "bootstrap-sass-official": "v3.2.0+2",
+    "angularjs-geolocation": "~0.1.1"
   }
 }
