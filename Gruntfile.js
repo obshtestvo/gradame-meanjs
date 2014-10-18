@@ -68,6 +68,10 @@ module.exports = function(grunt) {
       }
     },
 
+    env : {
+      src : "bashrc.json"
+    },
+
     nodemon: {
       dev: {
         script: 'server.js',
@@ -110,7 +114,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('fix-spaces', ['trimtrailingspaces', 'exec:tabs2spaces']);
 
-  grunt.registerTask('default',['sass','concurrent']);
+  grunt.registerTask('default',['sass','env', 'concurrent']);
 
   grunt.registerTask('install',['exec:npmInstall','exec:bowerInstall']);
 
