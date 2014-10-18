@@ -3,7 +3,6 @@
 angular.module('core').controller('HeaderController', ['$scope', 'Authentication', 'Menus',
 	function($scope, Authentication, Menus) {
 		$scope.authentication = Authentication;
-    $scope.authentication.user.gravatarHash = md5($scope.authentication.user.email);
 		$scope.isCollapsed = false;
 		$scope.menu = Menus.getMenu('topbar');
 

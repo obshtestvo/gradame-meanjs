@@ -28,17 +28,17 @@ exports.forgot = function(req, res, next) {
 		},
 		// Lookup user by username
 		function(token, done) {
-			if (req.body.username) {
+			if (req.body.email) {
 				User.findOne({
-					username: req.body.username
+					email: req.body.email
 				}, '-salt -password', function(err, user) {
 					if (!user) {
 						return res.status(400).send({
-							message: 'No account with that username has been found'
+							message: 'Няма намерен акаунт за този email'
 						});
 					} else if (user.provider !== 'local') {
 						return res.status(400).send({
-							message: 'It seems like you signed up using your ' + user.provider + ' account'
+							message: 'Изглежда сте се регистрирали с вашия акаунт от ' + user.provider
 						});
 					} else {
 						user.resetPasswordToken = token;
@@ -51,7 +51,7 @@ exports.forgot = function(req, res, next) {
 				});
 			} else {
 				return res.status(400).send({
-					message: 'Username field must not be blank'
+					message: 'Въведете email'
 				});
 			}
 		},
