@@ -6,4 +6,4 @@ public/img/signals/
 *.css.map
 .sass-cache
 *.css
-bashrc.json
+.bashrc.json
