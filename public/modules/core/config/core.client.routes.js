@@ -6,11 +6,11 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider', '$httpPro
       return {
         'responseError': function(rejection) {
             if (rejection.status === 404) {
-                $location.path('/404');
+                $location.path('/404').replace();
             }
 
             if (rejection.status === 500) {
-                $location.path('/500');
+                $location.path('/500').replace();
             }
 
             return $q.reject(rejection);
