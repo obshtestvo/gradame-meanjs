@@ -8,6 +8,7 @@ module.exports = function(app) {
 
   // Article Routes
   app.get('/api/signals', signals.list);
+  app.get('/api/signals/constants', signals.constants);
   app.get('/api/signals/near', signals.findNear);
   app.get('/api/signals/mine', signals.mine);
   //app.post('/signals', users.requiresLogin, signals.create);
