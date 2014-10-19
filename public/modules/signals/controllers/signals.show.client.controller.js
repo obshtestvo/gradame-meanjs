@@ -1,14 +1,11 @@
 'use strict';
 
-angular.module('signals').controller('SignalsViewCtrl', ['$scope', '$stateParams', 'Signal', function($scope, $stateParams, Signal) {
-  $scope.load = function() {
-    Signal.get({ _id: $stateParams.signalId }, function(signal) {
-      $scope.signal = signal
-      $scope.comment = "";
-    })
-  }
+angular.module('signals').controller('SignalsShowCtrl', ['$scope', '$stateParams', 'Signal', function($scope, $stateParams, Signal) {
+  Signal.get({ _id: $stateParams.signalId }, function(signal) {
+    $scope.signal = signal;
+  });
 
-  $scope.load();
+  $scope.comment = ""
 
   $scope.addComment = function(comment) {
     Signal.activitiesAdd({_id: $stateParams.signalId,
@@ -17,5 +14,9 @@ angular.module('signals').controller('SignalsViewCtrl', ['$scope', '$stateParams
     }).$promise.then(function() {
     	$scope.load();
     });
+  }
+
+  $scope.assign = function(asigneeRole) {
+    signal.$update()
   }
 }])

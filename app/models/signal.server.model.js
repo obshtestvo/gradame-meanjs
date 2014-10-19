@@ -8,17 +8,11 @@ var mongoose = require('mongoose'),
 
 
 var ActivitySchema = new Schema({
-    dateTime : { type: Date, default: Date.now },
-    type : String,  // or 0,1,2
-    createdBy : { type: Schema.Types.ObjectId, ref: 'User' },
-    comment: String,
-    status: String,
-    changes : [
-      {
-        field: String,
-        value: Schema.Types.Mixed
-      }
-    ]
+  created: { type: Date, default: Date.now },
+  created_by: { type: Schema.Types.ObjectId, ref: 'User' },
+  comment: String,
+  status: Number,
+  type: Number // COMMENT or TRANSITION
 });
 
 /**
@@ -26,15 +20,17 @@ var ActivitySchema = new Schema({
  */
 var SignalSchema = new Schema({
   type: String,
-  //title: { type: String, default: '', trim: true },
-  author: { type: Schema.Types.ObjectId, ref: 'User' },
-  authorName: String,
+  created: { type: Date, default: Date.now },
+  updated: { type: Date, default: Date.now },
+
+  created_by: { type: Schema.Types.ObjectId, ref: 'User' },
+  handled_by: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+
   description: String,
   location: { type: [Number], index: '2dsphere' },
   address: String,
-  status: { type: Number, default: 0},
+  status: { type: Number, default: 0 },
   images: { type: [String] },
-  date_created: { type: Date, default: Date.now },
   activities: [ ActivitySchema ]
 });
 
@@ -53,7 +49,7 @@ SignalSchema.statics = {
   load: function(id, cb) {
     this.findOne({
       _id: id
-    }).populate('user', 'displayName').exec(cb);
+    }).populate('created_by handled_by').exec(cb);
   }
 };
 
