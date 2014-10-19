@@ -4,6 +4,7 @@ angular.module('signals').controller('SignalsCtrl', ['$scope', '$location', '$ht
   function ($scope, $location, $http, $timeout, Signal, Maps, geolocation) {
     $scope.signals = [];
     $scope.markers = [];
+    $scope.loadedMarkersRegistry = [];
 
     $scope.signalTypes = [
       "Улична дупка",
@@ -31,11 +32,11 @@ angular.module('signals').controller('SignalsCtrl', ['$scope', '$location', '$ht
       }
 
       Signal.query($scope.params, function(signals) {
-        var markers = [];
-
-        _.each(signals, function(sig, i) {
-          markers.push({
-            id: i,
+        _.each(signals, function(sig) {
+          var id = sig._id
+          if ($scope.loadedMarkersRegistry.indexOf(id) > -1) return;
+          $scope.markers.push({
+            id: id,
             options: {
               animation: google.maps.Animation.DROP
             },
@@ -45,9 +46,8 @@ angular.module('signals').controller('SignalsCtrl', ['$scope', '$location', '$ht
               longitude: sig.location[1]
             }
           })
+          $scope.loadedMarkersRegistry.push(id)
         })
-
-        $scope.markers = markers;
         $scope.signals = signals;
       });
     }
