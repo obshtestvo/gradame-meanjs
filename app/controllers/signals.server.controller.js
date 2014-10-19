@@ -275,7 +275,7 @@ exports.activitiesAdd = function(req, res){
 exports.signalByID = function(req, res, next, id) {
   Signal.load(id, function(err, signal) {
     if (err) return next(err);
-    if (!signal) return next(new Error('Failed to load signal ' + id));
+    if (!signal) return res.send(404, 'No such signal');
     req.signal = signal;
     next();
   });
