@@ -8,7 +8,8 @@ angular.module('signals').controller('SignalsShowCtrl', ['$scope', '$stateParams
   $scope.comment = ""
 
   $scope.addComment = function(comment) {
-    Signal.activitiesAdd({_id: $stateParams.signalId,
+    Signal.activitiesAdd({
+      _id: $stateParams.signalId,
     	type: "comment",
     	comment: comment
     }).$promise.then(function() {
@@ -16,7 +17,9 @@ angular.module('signals').controller('SignalsShowCtrl', ['$scope', '$stateParams
     });
   }
 
+  //@TODO Not implemented
   $scope.assign = function(asigneeRole) {
-    signal.$update()
+    if (!asigneeRole) // unassign
+    Signal.$update()
   }
 }])
