@@ -38,23 +38,6 @@ angular.module('signals').controller('SignalsNewCtrl', ['$scope', '$state', 'Sig
 angular.module('signals').controller('SignalsIndexCtrl', ['$scope', 'Signal', function ($scope, Signal) {
     $scope.signals = [];
 
-    $scope.params = {
-      bounds: "",
-      location: "",
-      type: "",
-      status: ""
-    };
-
-    $scope.mapIdleHandlers.trackBounds = function(map, eventName, originalEventArgs) {
-      $scope.params.bounds = map.getBounds().toString();
-      var center = map.getCenter();
-
-      var coords = {
-        latitude: center.lat(),
-        longitude: center.lng()
-      }
-    }
-
     function reloadSignals() {
       if (_.isEmpty($scope.params.bounds))
         return;
@@ -116,6 +99,23 @@ angular.module('signals').controller('SignalsCtrl', ['$scope', 'geolocation',
       "Нерегламентиран боклук",
       "Вандализъм"
     ];
+
+    $scope.params = {
+      bounds: "",
+      location: "",
+      type: "",
+      status: ""
+    };
+
+    $scope.mapIdleHandlers.trackBounds = function(map, eventName, originalEventArgs) {
+      $scope.params.bounds = map.getBounds().toString();
+      var center = map.getCenter();
+
+      var coords = {
+        latitude: center.lat(),
+        longitude: center.lng()
+      }
+    }
 
     $scope.signalStatuses = [
       "отворен",
