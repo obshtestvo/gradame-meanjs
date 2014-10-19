@@ -52,10 +52,24 @@ angular.module('core').factory('Signal', ['$resource', function($resource) {
       params: {
         collectionRoute: 'mine'
       }
-    }
+    },
   }
 
   var Signal = $resource('/api/signals/:collectionRoute:_id/:memberRoute', { _id: '@_id' }, defaultActions);
+
+
+  Signal.constants = {
+    ACTIVITY_TYPE: {
+      COMMENT: 1,
+      TRANSITION: 2
+    },
+    SIGNAL_STATUS: {
+      OPEN: 1,
+      INPROGRESS: 2,
+      CLOSED: 3,
+      INVALID: 4
+    }
+  }
 
   return Signal;
 }]);

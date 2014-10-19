@@ -8,7 +8,8 @@ var mongoose = require('mongoose'),
   fs = require('fs'),
   Q = require('q'),
   path = require('path'),
-  _ = require('lodash')
+  _ = require('lodash'),
+  SignalModel = require('../models/signal')
 
 
 /**
@@ -173,16 +174,14 @@ exports.list = function(req, res) {
 };
 
 exports.mine = function(req, res) {
-  
   var queryJson = {};
 
   queryJson['author'] = req.user._id;
   console.log(req.user._id);
 
-  if(req.query){
+  if (req.query) {
 
-    
-    if(req.query.type){
+    if (req.query.type) {
       queryJson['type'] = req.query.type;
     }
     if(req.query.status){
@@ -206,6 +205,9 @@ exports.mine = function(req, res) {
   });
 };
 
+exports.constants = function(req, res) {
+  res.jsonp(SignalModel.constants)
+}
 
 exports.findNear = function(req, res) {
 

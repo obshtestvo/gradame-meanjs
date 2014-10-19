@@ -12,6 +12,7 @@ var ActivitySchema = new Schema({
     type : String,  // or 0,1,2
     createdBy : { type: Schema.Types.ObjectId, ref: 'User' },
     comment: String,
+    status: String,
     changes : [
       {
         field: String,
@@ -35,10 +36,7 @@ var SignalSchema = new Schema({
   images: { type: [String] },
   date_created: { type: Date, default: Date.now },
   activities: [ ActivitySchema ]
-
 });
-
-
 
 /**
  * Validations
@@ -60,3 +58,18 @@ SignalSchema.statics = {
 };
 
 mongoose.model('Signal', SignalSchema);
+
+exports.constants = {
+  ACTIVITY_TYPE: {
+    COMMENT: 1,
+    TRANSITION: 2
+  },
+
+  SIGNAL_STATUS: {
+    OPEN: 1,
+    INPROGRESS: 2,
+    CLOSED: 3,
+    INVALID: 4
+  }
+}
+

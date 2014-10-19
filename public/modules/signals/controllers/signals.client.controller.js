@@ -46,7 +46,6 @@ angular.module('signals').controller('SignalsIndexCtrl', ['$scope', 'Signal', fu
     };
 
     $scope.mapIdleHandlers.trackBounds = function(map, eventName, originalEventArgs) {
-      console.log('asdasd')
       $scope.params.bounds = map.getBounds().toString();
       var center = map.getCenter();
 
