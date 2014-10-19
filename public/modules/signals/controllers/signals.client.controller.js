@@ -1,23 +1,8 @@
 'use strict';
 
-angular.module('signals').controller('SignalsCtrl', ['$scope', '$location', '$http', '$timeout', 'Signal', 'Maps', 'geolocation',
-  function ($scope, $location, $http, $timeout, Signal, Maps, geolocation) {
+angular.module('signals').controller('SignalsIndexCtrl', ['$scope', '$location', '$http', '$timeout', 'Signal', 'geolocation',
+  function ($scope, $location, $http, $timeout, Signal, geolocation) {
     $scope.signals = [];
-    $scope.markers = [];
-    $scope.loadedMarkersRegistry = [];
-
-    $scope.signalTypes = [
-      "Улична дупка",
-      "Липсваща шахта",
-      "Висящи кабели",
-      "Нерегламентиран боклук",
-      "Вандализъм"
-    ];
-
-    $scope.signalStatuses = [
-      "отворен",
-      "решен"
-    ];
 
     $scope.params = {
       bounds: "",
@@ -25,6 +10,16 @@ angular.module('signals').controller('SignalsCtrl', ['$scope', '$location', '$ht
       type: "",
       status: ""
     };
+
+    $scope.map.events.idle = function(map, eventName, originalEventArgs) {
+      $scope.params.bounds = map.getBounds().toString();
+      var center = map.getCenter();
+
+      var coords = {
+        latitude: center.lat(),
+        longitude: center.lng()
+      }
+    }
 
     function reloadSignals() {
       if (_.isEmpty($scope.params.bounds))
@@ -47,11 +42,53 @@ angular.module('signals').controller('SignalsCtrl', ['$scope', '$location', '$ht
           })
           $scope.loadedMarkersRegistry.push(id)
         })
+
         $scope.signals = signals;
       });
     }
 
     $scope.$watch('params', reloadSignals, true);
+
+    $scope.autocomplete = {
+      details: {},
+      options: {
+        country: 'bg'
+      }
+    }
+
+    $scope.$watch('autocomplete.details', function(details) {
+      if (_.isEmpty(details))
+        return;
+
+      var location = details.geometry.location;
+
+      var coords = {
+        latitude: location.lat(),
+        longitude: location.lng()
+      }
+
+      $scope.map.center = coords;
+    });
+  }
+])
+
+angular.module('signals').controller('SignalsCtrl', ['$scope', '$location', '$http', '$timeout', 'Signal', 'geolocation',
+  function ($scope, $location, $http, $timeout, Signal, geolocation) {
+    $scope.signalTypes = [
+      "Улична дупка",
+      "Липсваща шахта",
+      "Висящи кабели",
+      "Нерегламентиран боклук",
+      "Вандализъм"
+    ];
+
+    $scope.signalStatuses = [
+      "отворен",
+      "решен"
+    ];
+
+    $scope.markers = []
+    $scope.loadedMarkersRegistry = [];
 
     $scope.currentMarker = {
       id: "center",
@@ -78,43 +115,12 @@ angular.module('signals').controller('SignalsCtrl', ['$scope', '$location', '$ht
         longitude: 23.3
       },
       zoom: 15,
-      events: {
-        idle: function(map, eventName, originalEventArgs) {
-          $scope.params.bounds = map.getBounds().toString();
-          var center = map.getCenter();
-
-          var coords = {
-            latitude: center.lat(),
-            longitude: center.lng()
-          }
-        }
-      }
+      events: {}
     };
 
     geolocation.getLocation().then(function(data){
       $scope.map.center = data.coords;
       $scope.currentMarker.coords = data.coords;
-    });
-
-    $scope.autocomplete = {
-      details: {},
-      options: {
-        country: 'bg'
-      }
-    }
-
-    $scope.$watch('autocomplete.details', function(details) {
-      if (_.isEmpty(details))
-        return;
-
-      var location = details.geometry.location;
-
-      var coords = {
-        latitude: location.lat(),
-        longitude: location.lng()
-      }
-
-      $scope.map.center = coords;
     });
   }
 ]);
