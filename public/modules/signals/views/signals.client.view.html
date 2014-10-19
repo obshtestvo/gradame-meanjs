@@ -55,7 +55,7 @@
       style="width: 100%;height:100%;"
       >
         <marker icon="currentMarker.icon" options="currentMarker.options" coords="currentMarker.coords" idKey="currentMarker.id">
-        <marker ng-repeat="marker in markers" icon="marker.icon" options="marker.options" coords="marker.coords" idKey="marker.id">
+        <markers models="markers" coords="'coords'" icon="'icon'" doCluster=true></markers>
       </google-map>
   </div>
 </div>

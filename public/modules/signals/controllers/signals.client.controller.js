@@ -3,6 +3,7 @@
 angular.module('signals').controller('SignalsCtrl', ['$scope', '$location', '$http', '$timeout', 'Signal', 'Maps', 'geolocation',
   function ($scope, $location, $http, $timeout, Signal, Maps, geolocation) {
     $scope.signals = [];
+    $scope.markers = [];
 
     $scope.signalTypes = [
       "Улична дупка",
@@ -30,9 +31,9 @@ angular.module('signals').controller('SignalsCtrl', ['$scope', '$location', '$ht
       }
 
       Signal.query($scope.params, function(signals) {
-        var i = 0, markers = [];
+        var markers = [];
 
-        _.each(signals, function(sig) {
+        _.each(signals, function(sig, i) {
           markers.push({
             id: i,
             options: {
