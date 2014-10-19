@@ -1,10 +1,11 @@
 'use strict';
 
-angular.module('signals').controller('SignalsIndexCtrl', ['$scope', 'Signal', function ($scope, Signal) {
+angular.module('signals').controller('SignalsNewCtrl', ['$scope', '$state', 'Signal', function ($scope, $state, Signal) {
   $scope.signal = new Signal();
+
   var geocoder = new google.maps.Geocoder();
 
-  $scope.mapIdleHandlers.trackCenter =  function(map, eventName, originalEventArgs) {
+  $scope.mapIdleHandlers.trackCenter = function(map, eventName, originalEventArgs) {
     $scope.signal.location = map.getCenter().toString();
     geocoder.geocode({'latLng': map.getCenter()}, function(results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
@@ -17,26 +18,19 @@ angular.module('signals').controller('SignalsIndexCtrl', ['$scope', 'Signal', fu
     });
   }
 
-  $scope.save = function(){
+  // TODO: add validation
+  $scope.save = function() {
     if (!$scope.signal.status) {
       $scope.signal.status = 0;
     }
 
-    if ($scope.signal._id) {
-      Signal.update({_id:$scope.signal._id}, $scope.signal).$promise.then(function(){
-        $state.go('signals');
-      })
-      //$scope.signal.$save().then($scope.load);
-    } else {
-      var signal = $scope.signal;
-      Signal.save(signal).$promise.then(function(){
-        $state.go('signals');
-      });
-    }
-    //$scope.signal = new Signal();
+    // TODO: handle errors
+    $scope.signal.$save(function() {
+      $state.go('signals.index')
+    })
   }
 
-  $scope.reset = function(){
+  $scope.reset = function() {
     $scope.signal = new Signal();
   }
 }])
