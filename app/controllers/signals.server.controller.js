@@ -130,8 +130,6 @@ exports.delete = function(req, res) {
  * List of Signals
  */
 exports.list = function(req, res) {
-  console.log({user: req.user});
-
   var queryJson = {};
 
   if(req.query){

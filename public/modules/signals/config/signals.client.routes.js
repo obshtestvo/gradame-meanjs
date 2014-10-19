@@ -20,7 +20,7 @@ angular.module('signals').config(['$stateProvider',
       .state('signals-show', {
         url : '/signals/{signalId}',
         templateUrl: 'modules/signals/views/signals.show.client.view.html',
-        controller: 'SignalsViewCtrl'
+        controller: 'SignalsShowCtrl',
       })
   }
 ]);

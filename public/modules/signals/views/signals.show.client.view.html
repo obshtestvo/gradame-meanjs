@@ -1,7 +1,8 @@
+{{ signal }}
 <div class="row signals-view">
   <div class="col-xs-12 col-sm-4 left-pane">
     <h3>{{ signal.type }}</h3>
-    <div class="timestamp">Подаден на {{ signal.date_created | date:'dd MMM yyyy HH:mm' }}</div>
+    <div class="timestamp">Подаден на {{ signal.created | date:'dd MMM yyyy HH:mm' }}</div>
     <div class="status">
       <div class="open" ng-class="(signal.status == 0) ? 'active' : ''">отворен</div>
       <div class="assigned" ng-class="(signal.status == 1) ? 'active' : ''">работи се</div>

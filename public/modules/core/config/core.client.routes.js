@@ -2,20 +2,21 @@
 
 angular.module('core').config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
   function ($stateProvider, $urlRouterProvider, $httpProvider) {
-    /*
-    $httpProvider.interceptors.push(['TokenHandler', function(TokenHandler) {
+    $httpProvider.interceptors.push(['$q', '$location', function($q, $location) {
       return {
-        request: function(config) {
-          // add token unless we are requesting an external site
-          if (!config.url.match(/^http/)) {
-            config.headers['token'] = TokenHandler.get();
-          }
+        'responseError': function(rejection) {
+            if (rejection.status === 404) {
+                $location.path('/404');
+            }
 
-          return config;
-        }
-      }
+            if (rejection.status === 500) {
+                $location.path('/500');
+            }
+
+            return $q.reject(rejection);
+         }
+     }
     }]);
-   */
 
     $stateProvider
       .state('home', {
@@ -26,7 +27,15 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider', '$httpPro
         url : '/',
         templateUrl: 'modules/core/views/home.client.view.html'
       })
-      .state("otherwise", { url : '/'});
+      .state('404', {
+        url : '/404',
+        templateUrl: 'modules/core/views/404.client.view.html'
+      })
+      .state('500', {
+        url : '/500',
+        templateUrl: 'modules/core/views/500.client.view.html'
+      })
+      .state("otherwise", { url : '/404'});
 
     //$locationProvider.client.view.html5Mode(true);
   }
