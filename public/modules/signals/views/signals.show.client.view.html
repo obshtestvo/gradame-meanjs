@@ -8,6 +8,11 @@
       <div class="resolved" ng-class="(signal.status == 2) ? 'active' : ''">решен</div>
     </div>
     <div>
+        <a href="" ng-onclick="assign('owner')">Заемам се</a>
+        <!-- if община тва го няма -->
+        <a href="" ng-onclick="assign('middleman')">Ще съм посредник</a>
+    </div>
+    <div>
       {{ signal.address }}<br>
       {{ signal.location }}
     </div>
