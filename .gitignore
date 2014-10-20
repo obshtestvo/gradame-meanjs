@@ -7,3 +7,4 @@ public/img/signals/
 .sass-cache
 *.css
 .bashrc.json
+data/*

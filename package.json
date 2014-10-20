@@ -41,7 +41,8 @@
     "crypto": "0.0.3",
     "karma": "^0.12.22",
     "jade": "~1.7.0",
-    "ejs": "~1.0.0"
+    "ejs": "~1.0.0",
+    "maxmind": "~0.5"
   },
   "author": "Volunteer civic hackers at www.obshtestvo.bg",
   "devDependencies": {

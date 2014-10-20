@@ -89,8 +89,8 @@ angular.module('signals').controller('SignalsIndexCtrl', ['$scope', 'Signal', fu
   }
 ])
 
-angular.module('signals').controller('SignalsCtrl', ['$scope', 'geolocation',
-  function ($scope, geolocation) {
+angular.module('signals').controller('SignalsCtrl', ['$scope', 'geolocation', 'GeoIP',
+  function ($scope, geolocation, GeoIP) {
     $scope.mapIdleHandlers = {};
     $scope.signalTypes = [
       "Улична дупка",
@@ -159,10 +159,21 @@ angular.module('signals').controller('SignalsCtrl', ['$scope', 'geolocation',
       }
     };
 
-    geolocation.getLocation().then(function(data){
-      $scope.map.center = data.coords;
-      $scope.currentMarker.coords = data.coords;
-    });
+    // fetch location from server first
+    var location = GeoIP.getLocation();
+
+    location.$promise.then(function(data) {
+      var coords = { latitude: data.latitude, longitude: data.longitude }
+      $scope.map.center = coords;
+      $scope.currentMarker = coords;
+
+      // attempt to fetch more accurate location from browser location services
+      geolocation.getLocation().then(function(data){
+        $scope.map.center = data.coords;
+        $scope.currentMarker.coords = data.coords;
+      });
+    })
+
 
     $scope.autocomplete = {
       details: {},

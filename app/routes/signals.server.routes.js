@@ -6,6 +6,11 @@ module.exports = function(app) {
   var multipart = require('connect-multiparty');
   var multipartMiddleware = multipart();
 
+
+  // GeoIP location
+  // TODO: move to separate controller; similar to users module helper should be kept in a separate directory
+  app.get('/api/location', signals.location);
+
   // Article Routes
   app.get('/api/signals', signals.list);
   app.get('/api/signals/constants', signals.constants);
