@@ -109,6 +109,7 @@ angular.module('signals').controller('SignalsCtrl', ['$scope', 'geolocation', 'l
     $scope.mapIdleHandlers.trackBounds = function(map, eventName, originalEventArgs) {
       $scope.params.bounds = map.getBounds().toString();
       $scope.$apply()
+      $scope.params.bounds = bounds;
     }
 
     $scope.signalStatuses = {}

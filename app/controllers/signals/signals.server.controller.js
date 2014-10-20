@@ -134,25 +134,20 @@ exports.delete = function(req, res) {
 exports.index = function(req, res) {
   var queryJson = {};
 
-  if(req.query){
-    if(req.query.bounds){
+  if (req.query) {
+    if (req.query.bounds) {
       var bounds = req.query.bounds;
 
-      bounds = bounds.substr(1,bounds.length-2).split('), (');
+      queryJson['location'] = { $geoWithin : { $box : [ bounds.ne, bounds.sw ] } };
       console.log(bounds);
-
-      bounds[0] = bounds[0].substr(1,bounds[0].length-1).split(', ');
-      bounds[1] = bounds[1].substr(0,bounds[1].length-2).split(', ');
-
-
-      queryJson['location'] = { $geoWithin : { $box : bounds} };
-      //console.log(bounds);
+      console.log(bounds.ne);
+      console.log([bounds['ne'], bounds['sw']]);
 
     }
-    if(req.query.type){
+    if (req.query.type) {
       queryJson['type'] = req.query.type;
     }
-    if(req.query.status){
+    if (req.query.status) {
       queryJson['status'] = req.query.status;
     }
 
@@ -160,6 +155,7 @@ exports.index = function(req, res) {
 
 
   Signal.find(queryJson).sort('-date_created').limit(req.query.limit ? req.query.limit : 0).populate('user', 'displayName').exec(function(err, signals) {
+    console.log(err);
     if (err) {
       res.jsonp('error', {
         status: 500,
