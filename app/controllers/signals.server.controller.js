@@ -212,6 +212,11 @@ exports.assign = function(req, res) {
   var signal = req.signal;
 }
 
+//@TODO implement
+exports.unassign = function(req, res) {
+  var signal = req.signal;
+}
+
 exports.findNear = function(req, res) {
 
   var location = req.query.location;

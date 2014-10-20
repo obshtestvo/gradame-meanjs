@@ -6,6 +6,19 @@
 var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
+/**
+ * SignalAssignment Schema - this will always be embedded in Signal document
+ * Because different people that have self-assigned a task
+ * have different roles
+ * @TODO validation
+ */
+// see http://stackoverflow.com/questions/19635807/mongoose-sub-document-without-array
+var SignalAssignmentSchemaDefinition = {
+  role: Number, // from ASSIGNMENT_TYPES
+  user: { type: Schema.Types.ObjectId, ref: 'User' }
+}
+var SignalAssignmentSchema = new Schema(SignalAssignmentSchemaDefinition);
+
 
 /**
  * ActivitySchema Schema - this will always be embedded in Signal document
@@ -16,22 +29,11 @@ var ActivitySchema = new Schema({
   created: { type: Date, default: Date.now },
   created_by: { type: Schema.Types.ObjectId, ref: 'User' },
   created_by_role:  Number, // role of created_bt user at the point of activity, values from ASSIGNMENT_TYPES or Null
-  assignment: SignalAssignmentSchema, // if created_by user explicitly has chosen to swap places with another or created_by is admin and assigns someone else
+  assignment: SignalAssignmentSchemaDefinition, // if created_by user explicitly has chosen to swap places with another or created_by is admin and assigns someone else
   comment: String,
   from_status: Number,
   to_status: Number,
   type: Number // see ACTIVITY_TYPE below
-});
-
-/**
- * SignalAssignment Schema - this will always be embedded in Signal document
- * Because different people that have self-assigned a task
- * have different roles
- * @TODO validation
- */
-var SignalAssignmentSchema = new Schema({
-  role: Number, // from ASSIGNMENT_TYPES
-  user: { type: Schema.Types.ObjectId, ref: 'User' }
 });
 
 /**

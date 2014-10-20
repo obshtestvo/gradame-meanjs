@@ -8,11 +8,10 @@
       <div class="assigned" ng-class="(signal.status == 1) ? 'active' : ''">работи се</div>
       <div class="resolved" ng-class="(signal.status == 2) ? 'active' : ''">решен</div>
     </div>
-    <div>
-        <a href="" ng-click="assign('owner')">Заемам се</a>
-        <!-- if община тва го няма -->
-        <a href="" ng-click="assign('middleman')">Ще помогна това да стигне до който трябва посредник</a>
-        <a href="" ng-click="assign('villian')">Признавам, аз го направим</a>
+    <div class="btn-group-vertical">
+        <button type="button" class="btn btn-primary" ng-click="assign('owner')">Ще помогна да се оправи.</button>
+        <button type="button" class="btn btn-info" ng-click="assign('middleman')">Ще помогна това да стигне до когото трябва</button>
+        <button type="button" class="btn btn-default" ng-click="assign('culprit')">Аз го направих, признавам</button>
     </div>
     <div>
       {{ signal.address }}<br>
