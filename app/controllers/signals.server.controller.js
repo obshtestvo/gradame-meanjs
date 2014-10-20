@@ -207,6 +207,11 @@ exports.constants = function(req, res) {
   res.jsonp(SignalModel.constants)
 }
 
+//@TODO implement
+exports.assign = function(req, res) {
+  var signal = req.signal;
+}
+
 exports.findNear = function(req, res) {
 
   var location = req.query.location;
@@ -280,11 +285,30 @@ exports.signalByID = function(req, res, next, id) {
 };
 
 /**
- * Signal authorization middleware
+ * Signal ownership middleware
  */
-exports.hasAuthorization = function(req, res, next) {
-  if (req.signal.user.id !== req.user.id) {
+exports.hasOwnership = function(req, res, next) {
+  if (req.signal.created_by.id !== req.user.id) {
     return res.send(403, 'User is not authorized');
+  }
+  next();
+};
+
+
+/**
+ * A signal self-assignment middleware
+ */
+exports.requiresAssignmentUnlessSuper = function(req, res, next) {
+  if (req.user.isSuper()) next()
+  var hasAssignment = false;
+  _.each(req.signal.handled_by, function(assignment) {
+    if (assignment.user.id == req.user.id) {
+      hasAssignment = true;
+      return false;
+    }
+  })
+  if (!hasAssignment) {
+    return res.send(403, 'User is has nothing to do with this signal');
   }
   next();
 };

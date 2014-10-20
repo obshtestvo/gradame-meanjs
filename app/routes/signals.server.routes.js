@@ -17,6 +17,8 @@ module.exports = function(app) {
   //app.put('/signals/:signalId', users.requiresLogin, signals.hasAuthorization, signals.update);
   app.put('/api/signals/:signalId', signals.update);
   app.post('/api/signals/:signalId/activities', signals.activitiesAdd);
+  app.post('/api/signals/:signalId/assignments', signals.assign);
+  app.delete('/api/signals/:signalId/assignment/:id', users.requiresLogin, signals.requiresAssignmentUnlessSuper, signals.unassign);
   //app.del('/signals/:signalId', users.requiresLogin, signals.hasAuthorization, signals.delete);
   app.delete('/api/signals/:signalId', signals.delete);
 

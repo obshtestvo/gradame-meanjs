@@ -15,7 +15,8 @@ var mongoose = require('mongoose'),
 var ActivitySchema = new Schema({
   created: { type: Date, default: Date.now },
   created_by: { type: Schema.Types.ObjectId, ref: 'User' },
-  to_user: { type: Schema.Types.ObjectId, ref: 'User' }, // if user explicitly has chosen to swap places with another
+  created_by_role:  Number, // role of created_bt user at the point of activity, values from ASSIGNMENT_TYPES or Null
+  assignment: SignalAssignmentSchema, // if created_by user explicitly has chosen to swap places with another or created_by is admin and assigns someone else
   comment: String,
   from_status: Number,
   to_status: Number,

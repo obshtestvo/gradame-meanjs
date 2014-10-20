@@ -5,8 +5,14 @@
  */
 var mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
+  _ = require('lodash'),
 	crypto = require('crypto');
 
+
+var CONSTANTS = {
+  ROLES: ['admin', 'moderator', 'municipality', 'organisation', 'user'],
+  SUPER_ROLES: ['admin', 'moderator']
+}
 /**
  * A Validation function for local strategy properties
  */
@@ -71,7 +77,7 @@ var UserSchema = new Schema({
 	roles: {
 		type: [{
 			type: String,
-			enum: ['user', 'admin']
+			enum: CONSTANTS.ROLES
 		}],
 		default: ['user']
 	},
@@ -121,6 +127,14 @@ UserSchema.methods.authenticate = function(password) {
 	return this.password === this.hashPassword(password);
 };
 
+
+/**
+ * Check if user is a super-user
+ */
+UserSchema.methods.isSuper = function() {
+	return _.intersection(req.user.roles, CONSTANTS.SUPER_ROLES).length
+};
+
 /**
  * Find possible not used username
  */
@@ -145,3 +159,5 @@ UserSchema.statics.findUniqueUsername = function(username, suffix, callback) {
 
 mongoose.model('User', UserSchema);
 
+
+exports.constants = CONSTANTS
