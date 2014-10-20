@@ -5,6 +5,8 @@
  */
 var mongoose = require('mongoose'),
   Signal = mongoose.model('Signal'),
+  SignalAssignment = mongoose.model('SignalAssignment'),
+  User = mongoose.model('User'),
   fs = require('fs'),
   Q = require('q'),
   path = require('path'),
@@ -207,14 +209,30 @@ exports.constants = function(req, res) {
   res.jsonp(SignalModel.constants)
 }
 
-//@TODO implement
-exports.assign = function(req, res) {
+exports.assign = function(req, res, next) {
   var signal = req.signal;
+
+  var assignment = new SignalAssignment()
+  assignment.user = req.targetUser
+  assignment.role = req.body.role
+
+  signal.handled_by.push(assignment)
+  signal.save(function(err) {
+    if (err) return next(err)
+    res.jsonp(signal);
+  });
 }
 
 //@TODO implement
 exports.unassign = function(req, res) {
   var signal = req.signal;
+  signal.handled_by = signal.handled_by.filter(function(assignment) {
+    return !assignment.user._id.equals(req.targetUser._id)
+  })
+  signal.save(function(err) {
+    if (err) return next(err)
+    res.jsonp(signal);
+  });
 }
 
 exports.findNear = function(req, res) {
@@ -276,6 +294,7 @@ exports.activitiesAdd = function(req, res){
   });
 }
 
+
 /**
  * Signal middleware
  */
@@ -294,25 +313,6 @@ exports.signalByID = function(req, res, next, id) {
 exports.hasOwnership = function(req, res, next) {
   if (req.signal.created_by.id !== req.user.id) {
     return res.send(403, 'User is not authorized');
-  }
-  next();
-};
-
-
-/**
- * A signal self-assignment middleware
- */
-exports.requiresAssignmentUnlessSuper = function(req, res, next) {
-  if (req.user.isSuper()) next()
-  var hasAssignment = false;
-  _.each(req.signal.handled_by, function(assignment) {
-    if (assignment.user.id == req.user.id) {
-      hasAssignment = true;
-      return false;
-    }
-  })
-  if (!hasAssignment) {
-    return res.send(403, 'User is has nothing to do with this signal');
   }
   next();
 };

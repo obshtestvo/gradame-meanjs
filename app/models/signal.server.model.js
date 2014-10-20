@@ -69,9 +69,11 @@ var SignalSchema = new Schema({
  */
 SignalSchema.statics = {
   load: function(id, cb) {
-    this.findOne({
-      _id: id
-    }).populate('created_by handled_by.user').exec(cb);
+    this
+      .findOne({_id: id})
+      .populate('created_by', 'displayName') // only what we need, not sensitive fields like `salt`
+      .populate('handled_by.user', 'displayName') // only what we need, not sensitive fields like `salt`
+      .exec(cb);
   }
 };
 

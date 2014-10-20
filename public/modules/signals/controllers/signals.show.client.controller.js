@@ -1,6 +1,8 @@
 'use strict';
 
-angular.module('signals').controller('SignalsShowCtrl', ['$scope', '$stateParams', 'Signal', function($scope, $stateParams, Signal) {
+angular.module('signals').controller('SignalsShowCtrl', ['$scope', '$stateParams', 'Signal', 'Authentication', function($scope, $stateParams, Signal, Authentication) {
+  $scope.authentication = Authentication;
+
   Signal.get({ _id: $stateParams.signalId }, function(signal) {
     $scope.signal = signal;
   });
@@ -19,7 +21,11 @@ angular.module('signals').controller('SignalsShowCtrl', ['$scope', '$stateParams
 
   //@TODO Not implemented
   $scope.assign = function(asigneeRole) {
-    if (!asigneeRole) // unassign
-    Signal.$update()
+    if (!asigneeRole) {
+      // unassign
+    }
+    Signal.assign({ userId: $scope.authentication.user._id, role: 'test'}, function(signal) {
+
+    })
   }
 }])

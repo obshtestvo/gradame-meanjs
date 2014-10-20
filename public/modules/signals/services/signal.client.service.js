@@ -39,6 +39,13 @@ angular.module('core').factory('Signal', ['$resource', function($resource) {
         memberRoute: 'activities'
       }
     },
+    assign: {
+      method: 'POST',
+      isArray: false,
+      params: {
+        memberRoute: 'assignments'
+      }
+    },
     findNear: {
       method: 'GET',
       isArray: true,
@@ -55,7 +62,7 @@ angular.module('core').factory('Signal', ['$resource', function($resource) {
     },
   }
 
-  var Signal = $resource('/api/signals/:collectionRoute:_id/:memberRoute', { _id: '@_id' }, defaultActions);
+  var Signal = $resource('/api/signals/:collectionRoute:_id/:memberRoute/:userId', { _id: '@_id' }, defaultActions);
 
 
   Signal.constants = {
