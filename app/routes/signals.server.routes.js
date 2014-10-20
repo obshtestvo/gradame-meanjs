@@ -8,7 +8,6 @@ module.exports = function(app) {
 
 
   // GeoIP location
-  // TODO: move to separate controller; similar to users module helper should be kept in a separate directory
   app.get('/api/location', signals.location);
 
   // Article Routes
