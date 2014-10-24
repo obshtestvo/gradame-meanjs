@@ -8,3 +8,4 @@ public/img/signals/
 *.css
 .bashrc.json
 data/*
+.idea/
