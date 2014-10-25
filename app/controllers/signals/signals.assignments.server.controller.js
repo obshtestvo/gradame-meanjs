@@ -7,7 +7,7 @@ exports.create = function(req, res, next) {
   assignment.user = req.targetUser
   assignment.role = req.body.role
 
-  signal.handled_by.push(assignment)
+  signal.assignments.push(assignment)
   signal.save(function(err) {
     if (err) return next(err)
     res.jsonp(signal);

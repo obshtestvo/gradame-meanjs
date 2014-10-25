@@ -48,7 +48,6 @@ angular.module('core').factory('Signal', ['$resource', function($resource) {
     },
     assign: {
       method: 'POST',
-      isArray: false,
       params: {
         memberRoute: 'assignments'
       }

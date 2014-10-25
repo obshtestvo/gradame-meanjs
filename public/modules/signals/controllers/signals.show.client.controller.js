@@ -24,7 +24,7 @@ angular.module('signals').controller('SignalsShowCtrl', ['$scope', '$stateParams
     if (!asigneeRole) {
       // unassign
     }
-    Signal.assign({ userId: $scope.authentication.user._id, role: 'test'}, function(signal) {
+    Signal.assign({ userId: $scope.authentication.user._id, role: asigneeRole}, function(signal) {
 
     })
   }

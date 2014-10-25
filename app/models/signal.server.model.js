@@ -49,7 +49,7 @@ var SignalSchema = new Schema({
   updated: { type: Date, default: Date.now },
 
   created_by: { type: Schema.Types.ObjectId, ref: 'User' },
-  handled_by: [SignalAssignmentSchema],
+  assignments: [SignalAssignmentSchema],
 
   description: String,
   location: { type: [Number], index: '2dsphere' },
