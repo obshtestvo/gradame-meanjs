@@ -132,7 +132,7 @@ UserSchema.methods.authenticate = function(password) {
  * Check if user is a super-user
  */
 UserSchema.methods.isSuper = function() {
-	return _.intersection(req.user.roles, CONSTANTS.SUPER_ROLES).length
+	return _.intersection(this.roles, CONSTANTS.SUPER_ROLES).length
 };
 
 /**
