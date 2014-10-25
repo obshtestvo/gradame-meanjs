@@ -31,6 +31,7 @@ module.exports = function(app) {
 
   // Signal assignments
   app.post('/api/signals/:signalId/assignments',  users.requiresLogin, users.userByIdFromBody, users.requiresSelfOrSuper, signals.assignments.create);
+  app.put('/api/signals/:signalId/assignments/:id',  users.requiresLogin, users.userByIdFromBody, users.requiresSelfOrSuper, signals.assignments.update);
   app.delete('/api/signals/:signalId/assignments/:id', users.requiresLogin, users.userByIdFromBody, users.requiresSelfOrSuper, signals.assignments.delete);
 
   // Finish by binding the signal middleware
