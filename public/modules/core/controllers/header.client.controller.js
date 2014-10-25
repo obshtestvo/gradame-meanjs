@@ -5,7 +5,7 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
     //this.addMenuItem = function(menuId, menuItemTitle, menuItemURL, menuItemType, menuItemUIRoute, isPublic, roles, position) {
     Menus.addMenuItem('topbar', 'Начало', '/', 'item', 'home-dash', true, '*');
     Menus.addMenuItem('topbar', 'Сигнали', 'signals/', 'item', 'signals.index', true, '*');
-    Menus.addMenuItem('topbar', 'Подай сигна', 'signals/new', 'item', 'signals.new', true, '*');
+    Menus.addMenuItem('topbar', 'Подай сигнал', 'signals/new', 'item', 'signals.new', true, '*');
 
 		$scope.authentication = Authentication;
 		$scope.isCollapsed = false;
