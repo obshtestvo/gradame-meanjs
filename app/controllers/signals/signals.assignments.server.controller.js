@@ -3,11 +3,15 @@
 exports.create = function(req, res, next) {
   var signal = req.signal;
 
-  var assignment = new SignalAssignment()
-  assignment.user = req.targetUser
-  assignment.role = req.body.role
+  var newAssignment = new SignalAssignment()
+  newAssignment.user = req.targetUser
+  newAssignment.role = req.body.role
 
-  signal.assignments.push(assignment)
+  signal.assignments = signal.assignments.filter(function(assignment) {
+    return !assignment.user._id.equals( newAssignment.user._id)
+  })
+
+  signal.assignments.push(newAssignment)
   signal.save(function(err) {
     if (err) return next(err)
     res.jsonp(assignment);

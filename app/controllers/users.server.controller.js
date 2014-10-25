@@ -17,7 +17,7 @@ module.exports = _.extend(
 	require('./users/users.profile'),
   {
     userByIdFromBody: function(req, res, next) {
-      User.findById(req.body.user_id, function(err, user) {
+      User.findById(req.body.userId, function(err, user) {
         if (err && (err.name && err.name!='CastError')) return next(err);
         if (!user) return res.send(404, 'No such user');
         req.targetUser = user;
