@@ -1,11 +1,9 @@
 'use strict';
 
-angular.module('signals').controller('SignalsShowCtrl', ['$scope', '$stateParams', 'Signal', 'Authentication', function($scope, $stateParams, Signal, Authentication) {
+angular.module('signals').controller('SignalsShowCtrl', ['$scope', '$stateParams','Authentication', 'Signal', 'signal', function($scope, $stateParams, Authentication, Signal, signal)  {
   $scope.authentication = Authentication;
 
-  Signal.get({ _id: $stateParams.signalId }, function(signal) {
-    $scope.signal = signal;
-  });
+  $scope.signal = signal;
 
   $scope.comment = ""
 
@@ -18,29 +16,34 @@ angular.module('signals').controller('SignalsShowCtrl', ['$scope', '$stateParams
     	$scope.load();
     });
   }
-
-  //@TODO Not implemented
-  $scope.assign = function(asigneeRole) {
-    if (!asigneeRole) {
-      // unassign
-    }
-    Signal.assign({ userId: $scope.authentication.user._id, role: asigneeRole}, function(signal) {
-
-    })
-  }
 }])
 
-angular.module('signals').controller('SignalAssignmentsCtrl', ['$scope', '$stateParams', 'SignalAssignment',
-  function($scope, $stateParams, SignalAssignment) {
-    var userAssignment = signal.getUserAssignment($scope.authentication.user._id);
+angular.module('signals').controller('SignalAssignmentsCtrl', ['$scope', '$stateParams', 'SignalAssignment', 'Authentication', 'signal',
+  function($scope, $stateParams, SignalAssignment, Authentication, signal) {
+    var userAssignment = signal.getUserAssignment(Authentication.user._id);
 
     $scope.userAssignment = new SignalAssignment(userAssignment)
 
-    function switch() {
-      $scope.userAssignment.$save({ signalId: $scope.signal._id });
+    function assign() {
+      $scope.userAssignment.userId = $scope.authentication.user._id;
+      $scope.userAssignment.$save({ signalId: signal._id });
     }
 
-    $scope.$watch('userAssignment', function(oldValue, newValue) {
+    function unassign() {
+      $scope.userAssignment.userId = $scope.authentication.user._id;
+      $scope.userAssignment.$remove({ signalId: signal._id });
+    }
+
+    $scope.$watch('userAssignment', function(value) {
+      if (_.isEmpty(userAssignment) && value.role == null)
+        return;
+
+      if (value.role == null) {
+        unassign();
+      }
+      else {
+        assign();
+      }
     }, true);
   }
 ])

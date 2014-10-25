@@ -27,8 +27,20 @@ angular.module('signals').config(['$stateProvider',
       })
       .state('signals-show', {
         url : '/signals/{signalId}',
-        templateUrl: 'modules/signals/views/signals.show.client.view.html',
-        controller: 'SignalsShowCtrl',
+        views: {
+          '': {
+            templateUrl: 'modules/signals/views/signals.show.client.view.html',
+            controller: 'SignalsShowCtrl',
+          },
+          'assignment@signals-show': {
+            controller: 'SignalAssignmentsCtrl',
+          }
+        },
+        resolve: {
+          signal: ['Signal', '$stateParams', function(Signal, $stateParams) {
+            return Signal.get({ _id: $stateParams.signalId }).$promise;
+          }]
+        }
       })
   }
 ]);

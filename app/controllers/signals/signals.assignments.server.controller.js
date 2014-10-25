@@ -17,7 +17,7 @@ exports.create = function(req, res, next) {
   signal.assignments.push(newAssignment)
   signal.save(function(err) {
     if (err) return next(err)
-    res.jsonp(assignment);
+    res.jsonp(newAssignment);
   });
 }
 
