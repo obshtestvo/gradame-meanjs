@@ -2,7 +2,7 @@
   <div class="sidebar" ui-view></div>
 
   <div class="map-container">
-    <google-map
+    <ui-gmap-google-map
       center="map.center"
       zoom="map.zoom"
       options="map.options"
@@ -12,9 +12,9 @@
       events="map.events"
       style="width: 100%;height:100%;"
       >
-        <marker icon="currentMarker.icon" options="currentMarker.options" coords="currentMarker.coords" idKey="currentMarker.id">
-        <markers models="markers" coords="'coords'" options="'options'" icon="'icon'" doCluster=true></markers>
-      </google-map>
+        <ui-gmap-marker icon="currentMarker.icon" options="currentMarker.options" coords="currentMarker.coords" idKey="currentMarker.id"></ui-gmap-marker>
+        <ui-gmap-markers models="markers" coords="'coords'" options="'options'" icon="'icon'" doCluster=true></ui-gmap-markers>
+      </ui-gmap-google-map>
   </div>
 </div>
 

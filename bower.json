@@ -4,6 +4,7 @@
   "dependencies": {
     "font-awesome": "~4.2.0",
     "lodash": "latest",
+    "bluebird": "*",
     "q": "~1.x",
     "jquery": "~2",
     "angular": "~1.2",
@@ -13,7 +14,7 @@
     "angular-bootstrap": "~0.11.0",
     "angular-ui-utils": "~0.1.1",
     "angular-ui-router": "~0.2.10",
-    "angular-google-maps": "~1.1.2",
+    "angular-google-maps": "2.0.6",
     "ngstorage": "latest",
     "js-md5": "latest",
     "bootstrap-sass-official": "v3.2.0+2",
