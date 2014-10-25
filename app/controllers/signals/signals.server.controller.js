@@ -113,7 +113,7 @@ exports.index = function(req, res) {
   }
 
   var params = {
-    location: { $geoWithin : { $box : [ bounds.ne, bounds.sw ] } },
+    location: { $geoWithin : { $box : [  bounds.sw, bounds.ne ] } },
   }
 
   if (req.query.type)
