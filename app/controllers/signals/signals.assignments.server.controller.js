@@ -1,5 +1,8 @@
 'use strict';
 
+var mongoose = require('mongoose'),
+  SignalAssignment = mongoose.model('SignalAssignment');
+
 exports.create = function(req, res, next) {
   var signal = req.signal;
 
