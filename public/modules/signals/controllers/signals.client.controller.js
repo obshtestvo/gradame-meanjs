@@ -39,8 +39,9 @@ angular.module('signals').controller('SignalsIndexCtrl', ['$scope', 'Signal', fu
     $scope.signals = [];
 
     function reloadSignals() {
-      if (_.isEmpty($scope.params.bounds))
+      if (_.isUndefined($scope.params.neLat)) {
         return;
+      }
 
       Signal.query($scope.params, function(signals) {
         $scope.markers.length = 0
@@ -100,16 +101,22 @@ angular.module('signals').controller('SignalsCtrl', ['$scope', 'geolocation', 'l
     ];
 
     $scope.params = {
-      bounds: "",
       location: "",
       type: "",
       status: ""
     };
 
     $scope.mapIdleHandlers.trackBounds = function(map, eventName, originalEventArgs) {
-      $scope.params.bounds = map.getBounds().toString();
-      $scope.$apply()
-      $scope.params.bounds = bounds;
+      $scope.$apply(function() {
+        var bounds = map.getBounds();
+
+        $scope.params = {
+          neLat: bounds.getNorthEast().lat(),
+          neLng: bounds.getNorthEast().lng(),
+          swLat: bounds.getSouthWest().lat(),
+          swLng: bounds.getSouthWest().lng()
+        }
+      })
     }
 
     $scope.signalStatuses = {}

@@ -3,7 +3,6 @@
 var _ = require('lodash');
 
 exports.create = function(req, res) {
-  console.log('dfsdf');
   var signal = req.signal;
 
   var activity = _.extend({}, req.body);
