@@ -8,10 +8,10 @@
       <div class="assigned" ng-class="(signal.status == 1) ? 'active' : ''">работи се</div>
       <div class="resolved" ng-class="(signal.status == 2) ? 'active' : ''">решен</div>
     </div>
-    <div class="btn-group-vertical">
-        <button type="button" class="btn btn-primary" ng-click="assign('owner')">Ще помогна да се оправи.</button>
-        <button type="button" class="btn btn-info" ng-click="assign('middleman')">Ще помогна това да стигне до когото трябва</button>
-        <button type="button" class="btn btn-default" ng-click="assign('culprit')">Аз го направих, признавам</button>
+    <div class="btn-group-vertical" ng-controller="SignalAssignmentsCtrl">
+        <button type="button" class="btn btn-primary" ng-model="assignment.role" btn-radio="'owner'" uncheckable>Ще помогна да се оправи.</button>
+        <button type="button" class="btn btn-info" ng-model="assignment.role" btn-radio="'middleman'" uncheckable>Ще помогна това да стигне до когото трябва</button>
+        <button type="button" class="btn btn-default" ng-model="assignment.role" btn-radio="'culprit'" uncheckable>Аз го направих, признавам</button>
     </div>
     <div>
       {{ signal.address }}<br>

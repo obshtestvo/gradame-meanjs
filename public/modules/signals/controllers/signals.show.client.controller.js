@@ -29,3 +29,18 @@ angular.module('signals').controller('SignalsShowCtrl', ['$scope', '$stateParams
     })
   }
 }])
+
+angular.module('signals').controller('SignalAssignmentsCtrl', ['$scope', '$stateParams', 'SignalAssignment',
+  function($scope, $stateParams, SignalAssignment) {
+    var userAssignment = signal.getUserAssignment($scope.authentication.user._id);
+
+    $scope.userAssignment = new SignalAssignment(userAssignment)
+
+    function switch() {
+      $scope.userAssignment.$save({ signalId: $scope.signal._id });
+    }
+
+    $scope.$watch('userAssignment', function(oldValue, newValue) {
+    }, true);
+  }
+])
