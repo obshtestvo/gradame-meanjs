@@ -29,8 +29,8 @@ exports.create = function(req, res) {
 
   var signal = new Signal(req.body);
 
-  if(req.user && req.user.id){
-    signal.author = req.user.id;
+  if (req.user && req.user.id) {
+    signal.created_by = req.user.id;
   }
 
   signal.save(function(err) {
@@ -40,34 +40,9 @@ exports.create = function(req, res) {
         signal: signal
       });
     } else {
-
       // populate files
       if(req.files){
-
-        var signalPath = path.join(__dirname , "/../../public/img/signals/", signal['_id']+'');
-        var images = [];
-        if(!fs.existsSync(path.join(__dirname , "/../../public/img/signals"))){
-          fs.mkdirSync(path.join(__dirname , "/../../public/img/signals"));
-        }
-
-        if(!fs.existsSync(signalPath) || !fs.statSync(signalPath).isDirectory()){
-          fs.mkdirSync(signalPath);
-        }
-
-        var index = 0;
-        for(var i in req.files){
-          var file = req.files[i];
-          var ext = file.name.substr(file.name.lastIndexOf('.'));
-          var newPath = signalPath+'/'+index+ext;
-          images.push(''+index+ext);
-          var fileData = fs.readFileSync(file.path);
-          fs.writeFileSync(newPath, fileData);
-          fs.unlinkSync(file.path);
-          index++;
-        }
-
-        signal.images = images;
-
+        signal.savePhotoFiles(req.files)
         signal.save(function(){
           if (err) {
             res.jsonp({

@@ -4,6 +4,9 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
+  path = require('path'),
+  fs = require('fs'),
+  _ = require('lodash'),
   Schema = mongoose.Schema;
 
 /**
@@ -55,6 +58,9 @@ var SignalSchema = new Schema({
   images: { type: [String] },
   activities: [ ActivitySchema ]
 });
+SignalSchema.basePhotoPath = path.join(__dirname , "/../../public/img/signals/");
+if(!fs.existsSync(SignalSchema.basePhotoPath))
+  fs.mkdirSync(SignalSchema.basePhotoPath);
 
 /**
  * Validations
@@ -75,6 +81,26 @@ SignalSchema.statics = {
       .populate('handled_by.user', 'displayName') // only what we need, not sensitive fields like `salt`
       .exec(cb);
   }
+};
+
+/**
+ * Method
+ */
+SignalSchema.methods.savePhotoFiles = function(files) {
+  var basePath = SignalSchema.basePhotoPath + this._id;
+  var images = []
+  if(!fs.existsSync(basePath) || !fs.statSync(basePath).isDirectory()){
+    fs.mkdirSync(basePath);
+  }
+  _.each(files, function(file, i) {
+    var ext = file.name.substr(file.name.lastIndexOf('.'));
+    var baseName = i + ext;
+    images.push(baseName);
+    var fileData = fs.readFileSync(file.path);
+    fs.writeFileSync(basePath + '/' + baseName, fileData);
+    fs.unlinkSync(file.path);
+  })
+  this.images = images
 };
 
 mongoose.model('Signal', SignalSchema);
@@ -103,4 +129,3 @@ exports.constants = {
     CULPRIT: 3
   }
 }
-
