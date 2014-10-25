@@ -1,10 +1,10 @@
 'use strict';
 
-exports.activitiesAdd = function(req, res) {
-  var signal = req.signal;
+var _ = require('lodash');
 
-  if (!signal.acitvities)
-    signal.acitvities = [];
+exports.create = function(req, res) {
+  console.log('dfsdf');
+  var signal = req.signal;
 
   var activity = _.extend({}, req.body);
   if (req.user && req.user.id) {

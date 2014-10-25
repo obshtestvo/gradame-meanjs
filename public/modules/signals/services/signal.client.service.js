@@ -25,12 +25,13 @@ angular.module('core').factory('Signal', ['$resource', function($resource) {
   var defaultActions = {
     save: {
       method: 'POST',
-      headers: {'Content-Type': undefined},
+      headers: { 'Content-Type': undefined },
       transformRequest: imageAppenderTransform
     },
     update: {
       method: 'PUT',
-      headers:{'Content-Type': false}
+      headers: { 'Content-Type': undefined },
+      transformRequest: imageAppenderTransform
     },
     activitiesAdd: {
       method: 'POST',

@@ -1,6 +1,6 @@
 'use strict';
 
-exports.assign = function(req, res, next) {
+exports.create = function(req, res, next) {
   var signal = req.signal;
 
   var assignment = new SignalAssignment()
@@ -14,8 +14,8 @@ exports.assign = function(req, res, next) {
   });
 }
 
-//@TODO implement
-exports.unassign = function(req, res) {
+// @TODO implement
+exports.delete = function(req, res) {
   var signal = req.signal;
   signal.handled_by = signal.handled_by.filter(function(assignment) {
     return !assignment.user._id.equals(req.targetUser._id)

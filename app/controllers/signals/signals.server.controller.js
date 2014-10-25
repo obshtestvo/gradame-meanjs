@@ -131,7 +131,7 @@ exports.delete = function(req, res) {
 /**
  * List of Signals
  */
-exports.list = function(req, res) {
+exports.index = function(req, res) {
   var queryJson = {};
 
   if(req.query){
