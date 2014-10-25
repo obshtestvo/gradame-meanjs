@@ -177,7 +177,6 @@ exports.mine = function(req, res) {
   var queryJson = {};
 
   queryJson['author'] = req.user._id;
-  console.log(req.user._id);
 
   if (req.query) {
 
@@ -190,7 +189,6 @@ exports.mine = function(req, res) {
 
   }
 
-
   Signal.find(queryJson).sort('-date_created').limit(req.query.limit ? req.query.limit : 0).populate('user', 'displayName').exec(function(err, signals) {
     if (err) {
       res.jsonp('error', {
@@ -198,9 +196,7 @@ exports.mine = function(req, res) {
         err: err
       });
     } else {
-
       res.jsonp(signals);
-
     }
   });
 };
@@ -209,42 +205,16 @@ exports.constants = function(req, res) {
   res.jsonp(SignalModel.constants)
 }
 
-exports.assign = function(req, res, next) {
-  var signal = req.signal;
-
-  var assignment = new SignalAssignment()
-  assignment.user = req.targetUser
-  assignment.role = req.body.role
-
-  signal.handled_by.push(assignment)
-  signal.save(function(err) {
-    if (err) return next(err)
-    res.jsonp(signal);
-  });
-}
-
-//@TODO implement
-exports.unassign = function(req, res) {
-  var signal = req.signal;
-  signal.handled_by = signal.handled_by.filter(function(assignment) {
-    return !assignment.user._id.equals(req.targetUser._id)
-  })
-  signal.save(function(err) {
-    if (err) return next(err)
-    res.jsonp(signal);
-  });
-}
-
 exports.findNear = function(req, res) {
 
   var location = req.query.location;
 
-  if(location && location.length){
+  if (location && location.length){
     location = location.substr(1,location.length-2);
     req.query.location = location.split(', ');
   }
 
-  if(!location.length){
+  if (!location.length){
     console.log({err: 'Location is malformed',location: location});
     res.jsonp('error', {
       status: 500
@@ -265,34 +235,6 @@ exports.findNear = function(req, res) {
   }
 
 };
-
-
-exports.activitiesAdd = function(req, res){
-  
-  var signal = req.signal;
-
-  if(!signal.acitvities)
-    signal.acitvities = [];
-
-  var activity = _.extend({}, req.body);
-  if(req.user && req.user.id){
-    activity.createdBy = req.user.id;
-  }
-
-  signal.activities.push(activity);
-
-  console.log(signal);
-
-  signal.save(function(err) {
-    if (err) {
-      res.render('error', {
-        status: 500
-      });
-    } else {
-      res.jsonp(signal);
-    }
-  });
-}
 
 
 /**

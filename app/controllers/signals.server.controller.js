@@ -10,6 +10,8 @@ var _ = require('lodash');
  */
 module.exports = _.extend(
 	require('./signals/signals'),
-	require('./signals/signals.location')
+	require('./signals/signals.location'),
+	require('./signals/signals.assignments'),
+	require('./signals/signals.activities')
 );
 
