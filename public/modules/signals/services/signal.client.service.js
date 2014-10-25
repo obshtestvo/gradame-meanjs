@@ -23,6 +23,12 @@ angular.module('core').factory('Signal', ['$resource', function($resource) {
   }
 
   var defaultActions = {
+    constants: {
+      method: 'GET',
+      params: {
+        collectionRoute: 'constants'
+      }
+    },
     save: {
       method: 'POST',
       headers: { 'Content-Type': undefined },
@@ -65,19 +71,5 @@ angular.module('core').factory('Signal', ['$resource', function($resource) {
 
   var Signal = $resource('/api/signals/:collectionRoute:_id/:memberRoute/:userId', { _id: '@_id' }, defaultActions);
 
-
-  Signal.constants = {
-    ACTIVITY_TYPE: {
-      COMMENT: 1,
-      TRANSITION: 2
-    },
-    SIGNAL_STATUS: {
-      OPEN: 1,
-      INPROGRESS: 2,
-      CLOSED: 3,
-      INVALID: 4
-    }
-  }
-
-  return Signal;
+  return Signal
 }]);

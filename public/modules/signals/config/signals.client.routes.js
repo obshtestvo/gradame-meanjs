@@ -6,6 +6,14 @@ angular.module('signals').config(['$stateProvider',
         url : '/signals',
         templateUrl: 'modules/signals/views/signals.client.view.html',
         controller: 'SignalsCtrl',
+        resolve: {
+          location: ['GeoIP', function(GeoIP) {
+            return GeoIP.getLocation().$promise
+          }],
+          constants: ['Signal', function(Signal) {
+            return Signal.constants().$promise
+          }]
+        }
       })
       .state('signals.index', {
         url : '/',

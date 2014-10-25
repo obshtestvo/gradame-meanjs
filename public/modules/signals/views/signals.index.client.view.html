@@ -5,11 +5,11 @@
       ng-autocomplete ng-model="autocomplete.address" details="autocomplete.details" options="autocomplete.options" />
     </div>
     <div class="form-group form-inline">
-      <select class="form-control input-sm" ng-model="filter.type">
+      <select class="form-control input-sm" ng-model="params.type">
         <option value="">Тип: всички</option>
         <option ng-repeat="signalType in signalTypes" value="{{ signalType }}" >{{ signalType }}</option>
       </select>
-      <select class="form-control input-sm" ng-model="filter.status">
+      <select class="form-control input-sm" ng-model="params.status">
         <option value="">Статус: всички</option>
         <option ng-repeat="signalStatus in signalStatuses" value="{{ $index }}" >{{ signalStatus }}</option>
       </select>

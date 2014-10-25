@@ -12,20 +12,18 @@ module.exports = function(app) {
 
   // Signal CRUD
   app.post('/api/signals', multipartMiddleware, signals.create);
+  // Constants
+  app.get('/api/signals/constants', signals.constants);
+  // List of signals for current user
+  app.get('/api/signals/mine', signals.mine);
   app.get('/api/signals/:signalId', signals.read);
   app.put('/api/signals/:signalId', multipartMiddleware, signals.update);
   app.delete('/api/signals/:signalId', signals.delete);
 
   //app.get('/api/signals/near', signals.findNear);
 
-  // List of signals for current user
-  app.get('/api/signals/mine', signals.mine);
-
   // GeoIP location
   app.get('/api/location', signals.location);
-
-  // Constants
-  app.get('/api/signals/constants', signals.constants);
 
   // Signal activities
   app.post('/api/signals/:signalId/activities', signals.activities.create);
