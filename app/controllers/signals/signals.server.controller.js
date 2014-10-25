@@ -104,67 +104,48 @@ exports.delete = function(req, res) {
 };
 
 /**
- * List of Signals
+ * Signal Index
  */
 exports.index = function(req, res) {
-  var queryJson = {};
-
-  if(req.query){
-    if(req.query.bounds){
-      var bounds = req.query.bounds;
-
-      bounds = bounds.substr(1,bounds.length-2).split('), (');
-      console.log(bounds);
-
-      bounds[0] = bounds[0].substr(1,bounds[0].length-1).split(', ');
-      bounds[1] = bounds[1].substr(0,bounds[1].length-2).split(', ');
-
-
-      queryJson['location'] = { $geoWithin : { $box : bounds} };
-      //console.log(bounds);
-
-    }
-    if(req.query.type){
-      queryJson['type'] = req.query.type;
-    }
-    if(req.query.status){
-      queryJson['status'] = req.query.status;
-    }
-
+  var bounds = {
+    ne: [ req.query.neLat, req.query.neLng ],
+    sw: [ req.query.swLat, req.query.swLng ]
   }
 
+  var params = {
+    location: { $geoWithin : { $box : [ bounds.ne, bounds.sw ] } },
+  }
 
-  Signal.find(queryJson).sort('-date_created').limit(req.query.limit ? req.query.limit : 0).populate('user', 'displayName').exec(function(err, signals) {
+  if (req.query.type)
+    params.type = req.query.type
+
+  if (req.query.status)
+    params.status = req.query.status
+
+  Signal.find(params).sort('-date_created').limit(req.query.limit ? req.query.limit : 0).populate('user', 'displayName').exec(function(err, signals) {
     if (err) {
       res.jsonp('error', {
         status: 500,
         err: err
       });
     } else {
-
       res.jsonp(signals);
-
     }
   });
 };
 
 exports.mine = function(req, res) {
-  var queryJson = {};
-
-  queryJson['author'] = req.user._id;
-
-  if (req.query) {
-
-    if (req.query.type) {
-      queryJson['type'] = req.query.type;
-    }
-    if(req.query.status){
-      queryJson['status'] = req.query.status;
-    }
-
+  var params = {
+    created_by: req.user._id,
   }
 
-  Signal.find(queryJson).sort('-date_created').limit(req.query.limit ? req.query.limit : 0).populate('user', 'displayName').exec(function(err, signals) {
+  if (req.query.type)
+    params.type = req.query.type
+
+  if (req.query.status)
+    params.status = req.query.status
+
+  Signal.find(params).sort('-date_created').limit(req.query.limit ? req.query.limit : 0).populate('user', 'displayName').exec(function(err, signals) {
     if (err) {
       res.jsonp('error', {
         status: 500,
@@ -181,7 +162,6 @@ exports.constants = function(req, res) {
 }
 
 exports.findNear = function(req, res) {
-
   var location = req.query.location;
 
   if (location && location.length){
@@ -190,11 +170,12 @@ exports.findNear = function(req, res) {
   }
 
   if (!location.length){
-    console.log({err: 'Location is malformed',location: location});
+    console.error({err: 'Location is malformed', location: location});
     res.jsonp('error', {
       status: 500
     });
-  } else {
+  }
+  else {
     // $maxDistance: 0.00019
     Signal.find({location: { $nearSphere: req.query.location, $maxDistance: 0.00025} }, function(err, signals) {
       if (err) {
@@ -202,13 +183,10 @@ exports.findNear = function(req, res) {
           status: 500
         });
       } else {
-
         res.jsonp(signals);
-
       }
     });
   }
-
 };
 
 

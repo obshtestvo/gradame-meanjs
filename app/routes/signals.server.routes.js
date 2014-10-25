@@ -6,16 +6,17 @@ module.exports = function(app) {
   var multipart = require('connect-multiparty');
   var multipartMiddleware = multipart();
 
-
   // Signal index
   app.get('/api/signals', signals.index);
 
-  // Signal CRUD
-  app.post('/api/signals', multipartMiddleware, signals.create);
   // Constants
   app.get('/api/signals/constants', signals.constants);
+
   // List of signals for current user
   app.get('/api/signals/mine', signals.mine);
+
+  // Signals CRUD
+  app.post('/api/signals', multipartMiddleware, signals.create);
   app.get('/api/signals/:signalId', signals.read);
   app.put('/api/signals/:signalId', multipartMiddleware, signals.update);
   app.delete('/api/signals/:signalId', signals.delete);
