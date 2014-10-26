@@ -103,6 +103,20 @@ SignalSchema.methods.savePhotoFiles = function(files) {
   this.images = images
 };
 
+SignalSchema.methods.destroyAssignment = function(assignment) {
+  this.assignments = this.assignments.filter(function(asgn) {
+    return !asgn.user._id.equals(assignment.user._id)
+  });
+}
+
+SignalSchema.methods.findAssignmentById = function(id) {
+  var assignments = this.assignments.filter(function(asgn) {
+    return asgn._id == id
+  });
+
+  return assignments[0];
+}
+
 mongoose.model('Signal', SignalSchema);
 mongoose.model('SignalAssignment', SignalAssignmentSchema);
 
