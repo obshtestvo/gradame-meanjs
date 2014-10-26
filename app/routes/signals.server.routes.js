@@ -1,11 +1,12 @@
 'use strict';
 
 module.exports = function(app) {
-  var safeguard = require('safeguard');
+  var safeguard = require('../../safeguard');
   var users = require('../../app/controllers/users');
   var signals = require('../../app/controllers/signals');
   var multipart = require('connect-multiparty');
   var multipartMiddleware = multipart();
+
 
   // Signal index
   app.get('/api/signals', signals.index);
@@ -34,18 +35,16 @@ module.exports = function(app) {
   app.post('/api/signals/:signalId/assignments',
     users.requiresLogin,
     signals.assignments.populateAssignment,
-    safeguard.enforce(signals.assignments.policy.assign),
+    safeguard.enforce('signal.assignment.create'),
     signals.assignments.create
   );
   app.put('/api/signals/:signalId/assignments/:id',
     users.requiresLogin,
     signals.assignments.populateAssignment,
-    safeguard.enforce(signals.assignments.policy.assign),
     signals.assignments.update);
   app.delete('/api/signals/:signalId/assignments/:id',
     users.requiresLogin,
     signals.assignments.populateAssignment,
-    safeguard.enforce(signals.assignments.policy.unassign),
     signals.assignments.delete);
 
   // Finish by binding the signal middleware

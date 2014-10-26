@@ -1,7 +1,8 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-  SignalAssignment = mongoose.model('SignalAssignment');
+  SignalAssignment = mongoose.model('SignalAssignment'),
+  _ = require('lodash');
 
 var destroyAssignment = function(signal, oldAssignment) {
   signal.assignments = signal.assignments.filter(function(assignment) {
@@ -17,14 +18,16 @@ exports.create = function(req, res, next) {
   var assignment = new SignalAssignment(req.bodyParams);
   signal.assignments.push(assignment)
 
+  console.log(signal);
+
   signal.save(function(err) {
     if (err) return next(err)
-    res.jsonp(assignment);
+      res.jsonp(assignment);
   })
 };
 
 exports.update = function(req, res, next) {
-  var signal = filterSignalAssignment(req.signal, req.assignment);
+  req.signal.destroyAssignment(req.assignment)
 
   var assignment = SignalAssignment(req.bodyParams)
   signal.assignments.push(assignment)
@@ -36,7 +39,7 @@ exports.update = function(req, res, next) {
 }
 
 exports.delete = function(req, res, next) {
-  var signal = filterSignalAssignment(req.signal, req.assignment)
+  req.signal.removeAssignment(req.bodyParams)
 
   signal.save(function(err) {
     if (err) return next(err)
@@ -44,32 +47,14 @@ exports.delete = function(req, res, next) {
   })
 }
 
-exports.permittedAttributes = ['user', 'role'];
-
 exports.populateAssignment = function(req, res, next) {
-  _.each(permittedAttributes, function(attr) {
-    req.bodyParams = req.body[attr]
-  })
-
   // assignment exists get it from signal
+  console.log(req.signal);
   req.assignment = req.signal.findAssignmentById(req.query.id);
+
   if (_.isUndefined(req.assignment)) return res.send(404, 'No such assignment');
 
   next()
 }
 
-exports.policy = {}
-exports.policy.assign = exports.policy.unassign  = function(req, bodyParams) {
-  if (_.isUndefined(bodyParams)) bodyParams = req.bodyParams
-
-  if (req.user.isSuper())
-    return true;
-
-  // update && delete
-  if (req.assignment)
-    return req.assignment.user._id == req.bodyParams.user
-
-  // create
-  return req.user._id == req.bodyParams.user;
-}
 

@@ -20,9 +20,9 @@ angular.module('signals').controller('SignalsShowCtrl', ['$scope', '$stateParams
 
 angular.module('signals').controller('SignalAssignmentsCtrl', ['$scope', '$stateParams', 'SignalAssignment', 'Authentication', 'signal',
   function($scope, $stateParams, SignalAssignment, Authentication, signal) {
-    var userAssignment = signal.getUserAssignment(Authentication.user._id);
+    //var userAssignment = signal.getUserAssignment(Authentication.user._id);
 
-    $scope.userAssignment = new SignalAssignment(userAssignment)
+    $scope.userAssignment = new SignalAssignment({})
 
     function assign() {
       $scope.userAssignment.userId = $scope.authentication.user._id;
