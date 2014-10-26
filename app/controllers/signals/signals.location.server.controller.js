@@ -5,7 +5,6 @@ var maxmind = require('maxmind'),
 
 maxmind.init('data/GeoLiteCity.dat');
 
-
 exports.location = function(req, res) {
   var addr = req.connection.remoteAddress,
       fwdForHeader = req.headers['x-forwarded-for']

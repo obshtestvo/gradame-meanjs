@@ -23,14 +23,21 @@ angular.module('core').factory('Signal', ['$resource', function($resource) {
   }
 
   var defaultActions = {
+    constants: {
+      method: 'GET',
+      params: {
+        collectionRoute: 'constants'
+      }
+    },
     save: {
       method: 'POST',
-      headers: {'Content-Type': undefined},
+      headers: { 'Content-Type': undefined },
       transformRequest: imageAppenderTransform
     },
     update: {
       method: 'PUT',
-      headers:{'Content-Type': false}
+      headers: { 'Content-Type': undefined },
+      transformRequest: imageAppenderTransform
     },
     activitiesAdd: {
       method: 'POST',
@@ -41,7 +48,6 @@ angular.module('core').factory('Signal', ['$resource', function($resource) {
     },
     assign: {
       method: 'POST',
-      isArray: false,
       params: {
         memberRoute: 'assignments'
       }
@@ -64,19 +70,14 @@ angular.module('core').factory('Signal', ['$resource', function($resource) {
 
   var Signal = $resource('/api/signals/:collectionRoute:_id/:memberRoute/:userId', { _id: '@_id' }, defaultActions);
 
+  Signal.prototype.getUserAssignment = function(user) {
+    var assignments = _.filter(this.assignments, function(a) { return a.user.id == user.id });
 
-  Signal.constants = {
-    ACTIVITY_TYPE: {
-      COMMENT: 1,
-      TRANSITION: 2
-    },
-    SIGNAL_STATUS: {
-      OPEN: 1,
-      INPROGRESS: 2,
-      CLOSED: 3,
-      INVALID: 4
-    }
+    if (assignments.length > 0)
+      return assignments[0];
+
+    return {};
   }
 
-  return Signal;
+  return Signal
 }]);

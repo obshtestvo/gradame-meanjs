@@ -18,6 +18,7 @@ module.exports = {
       js: [
         'public/lib/lodash/dist/lodash.js',
         'public/lib/q/q.js',
+        'public/lib/bluebird/js/browser/bluebird.js',
         'public/lib/jquery/dist/jquery.js',
         'public/lib/angular/angular.js',
         'public/lib/angular-resource/angular-resource.js',

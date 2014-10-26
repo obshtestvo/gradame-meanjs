@@ -4,6 +4,9 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
+  path = require('path'),
+  fs = require('fs'),
+  _ = require('lodash'),
   Schema = mongoose.Schema;
 
 /**
@@ -46,7 +49,7 @@ var SignalSchema = new Schema({
   updated: { type: Date, default: Date.now },
 
   created_by: { type: Schema.Types.ObjectId, ref: 'User' },
-  handled_by: [SignalAssignmentSchema],
+  assignments: [SignalAssignmentSchema],
 
   description: String,
   location: { type: [Number], index: '2dsphere' },
@@ -55,6 +58,9 @@ var SignalSchema = new Schema({
   images: { type: [String] },
   activities: [ ActivitySchema ]
 });
+SignalSchema.basePhotoPath = path.join(__dirname , "/../../public/img/signals/");
+if(!fs.existsSync(SignalSchema.basePhotoPath))
+  fs.mkdirSync(SignalSchema.basePhotoPath);
 
 /**
  * Validations
@@ -72,10 +78,44 @@ SignalSchema.statics = {
     this
       .findOne({_id: id})
       .populate('created_by', 'displayName') // only what we need, not sensitive fields like `salt`
-      .populate('handled_by.user', 'displayName') // only what we need, not sensitive fields like `salt`
+      .populate('assignments.user', 'displayName') // only what we need, not sensitive fields like `salt`
       .exec(cb);
   }
 };
+
+/**
+ * Method
+ */
+SignalSchema.methods.savePhotoFiles = function(files) {
+  var basePath = SignalSchema.basePhotoPath + this._id;
+  var images = []
+  if(!fs.existsSync(basePath) || !fs.statSync(basePath).isDirectory()){
+    fs.mkdirSync(basePath);
+  }
+  _.each(files, function(file, i) {
+    var ext = file.name.substr(file.name.lastIndexOf('.'));
+    var baseName = i + ext;
+    images.push(baseName);
+    var fileData = fs.readFileSync(file.path);
+    fs.writeFileSync(basePath + '/' + baseName, fileData);
+    fs.unlinkSync(file.path);
+  })
+  this.images = images
+};
+
+SignalSchema.methods.destroyAssignment = function(assignment) {
+  this.assignments = this.assignments.filter(function(asgn) {
+    return !asgn.user._id.equals(assignment.user._id)
+  });
+}
+
+SignalSchema.methods.findAssignmentById = function(id) {
+  var assignments = this.assignments.filter(function(asgn) {
+    return asgn._id == id
+  });
+
+  return assignments[0];
+}
 
 mongoose.model('Signal', SignalSchema);
 mongoose.model('SignalAssignment', SignalAssignmentSchema);
@@ -103,4 +143,3 @@ exports.constants = {
     CULPRIT: 3
   }
 }
-

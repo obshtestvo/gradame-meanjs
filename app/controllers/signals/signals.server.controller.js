@@ -29,8 +29,8 @@ exports.create = function(req, res) {
 
   var signal = new Signal(req.body);
 
-  if(req.user && req.user.id){
-    signal.author = req.user.id;
+  if (req.user && req.user.id) {
+    signal.created_by = req.user.id;
   }
 
   signal.save(function(err) {
@@ -40,34 +40,9 @@ exports.create = function(req, res) {
         signal: signal
       });
     } else {
-
       // populate files
       if(req.files){
-
-        var signalPath = path.join(__dirname , "/../../public/img/signals/", signal['_id']+'');
-        var images = [];
-        if(!fs.existsSync(path.join(__dirname , "/../../public/img/signals"))){
-          fs.mkdirSync(path.join(__dirname , "/../../public/img/signals"));
-        }
-
-        if(!fs.existsSync(signalPath) || !fs.statSync(signalPath).isDirectory()){
-          fs.mkdirSync(signalPath);
-        }
-
-        var index = 0;
-        for(var i in req.files){
-          var file = req.files[i];
-          var ext = file.name.substr(file.name.lastIndexOf('.'));
-          var newPath = signalPath+'/'+index+ext;
-          images.push(''+index+ext);
-          var fileData = fs.readFileSync(file.path);
-          fs.writeFileSync(newPath, fileData);
-          fs.unlinkSync(file.path);
-          index++;
-        }
-
-        signal.images = images;
-
+        signal.savePhotoFiles(req.files)
         signal.save(function(){
           if (err) {
             res.jsonp({
@@ -129,78 +104,55 @@ exports.delete = function(req, res) {
 };
 
 /**
- * List of Signals
+ * Signal Index
  */
-exports.list = function(req, res) {
-  var queryJson = {};
-
-  if(req.query){
-    if(req.query.bounds){
-      var bounds = req.query.bounds;
-
-      bounds = bounds.substr(1,bounds.length-2).split('), (');
-      console.log(bounds);
-
-      bounds[0] = bounds[0].substr(1,bounds[0].length-1).split(', ');
-      bounds[1] = bounds[1].substr(0,bounds[1].length-2).split(', ');
-
-
-      queryJson['location'] = { $geoWithin : { $box : bounds} };
-      //console.log(bounds);
-
-    }
-    if(req.query.type){
-      queryJson['type'] = req.query.type;
-    }
-    if(req.query.status){
-      queryJson['status'] = req.query.status;
-    }
-
+exports.index = function(req, res) {
+  var bounds = {
+    ne: [ req.query.neLat, req.query.neLng ],
+    sw: [ req.query.swLat, req.query.swLng ]
   }
 
+  var params = {
+    location: { $geoWithin : { $box : [  bounds.sw, bounds.ne ] } },
+  }
 
-  Signal.find(queryJson).sort('-date_created').limit(req.query.limit ? req.query.limit : 0).populate('user', 'displayName').exec(function(err, signals) {
+  if (req.query.type)
+    params.type = req.query.type
+
+  if (req.query.status)
+    params.status = req.query.status
+
+  Signal.find(params).sort('-date_created').limit(req.query.limit ? req.query.limit : 0).populate('user', 'displayName').exec(function(err, signals) {
     if (err) {
       res.jsonp('error', {
         status: 500,
         err: err
       });
     } else {
-
       res.jsonp(signals);
-
     }
   });
 };
 
 exports.mine = function(req, res) {
-  var queryJson = {};
-
-  queryJson['author'] = req.user._id;
-  console.log(req.user._id);
-
-  if (req.query) {
-
-    if (req.query.type) {
-      queryJson['type'] = req.query.type;
-    }
-    if(req.query.status){
-      queryJson['status'] = req.query.status;
-    }
-
+  var params = {
+    created_by: req.user._id,
   }
 
+  if (req.query.type)
+    params.type = req.query.type
 
-  Signal.find(queryJson).sort('-date_created').limit(req.query.limit ? req.query.limit : 0).populate('user', 'displayName').exec(function(err, signals) {
+  if (req.query.status)
+    params.status = req.query.status
+
+  Signal.find(params).sort('-date_created').limit(req.query.limit ? req.query.limit : 0).populate('user', 'displayName').exec(function(err, signals) {
     if (err) {
       res.jsonp('error', {
         status: 500,
         err: err
       });
     } else {
-
       res.jsonp(signals);
-
     }
   });
 };
@@ -209,47 +161,21 @@ exports.constants = function(req, res) {
   res.jsonp(SignalModel.constants)
 }
 
-exports.assign = function(req, res, next) {
-  var signal = req.signal;
-
-  var assignment = new SignalAssignment()
-  assignment.user = req.targetUser
-  assignment.role = req.body.role
-
-  signal.handled_by.push(assignment)
-  signal.save(function(err) {
-    if (err) return next(err)
-    res.jsonp(signal);
-  });
-}
-
-//@TODO implement
-exports.unassign = function(req, res) {
-  var signal = req.signal;
-  signal.handled_by = signal.handled_by.filter(function(assignment) {
-    return !assignment.user._id.equals(req.targetUser._id)
-  })
-  signal.save(function(err) {
-    if (err) return next(err)
-    res.jsonp(signal);
-  });
-}
-
 exports.findNear = function(req, res) {
-
   var location = req.query.location;
 
-  if(location && location.length){
+  if (location && location.length){
     location = location.substr(1,location.length-2);
     req.query.location = location.split(', ');
   }
 
-  if(!location.length){
-    console.log({err: 'Location is malformed',location: location});
+  if (!location.length){
+    console.error({err: 'Location is malformed', location: location});
     res.jsonp('error', {
       status: 500
     });
-  } else {
+  }
+  else {
     // $maxDistance: 0.00019
     Signal.find({location: { $nearSphere: req.query.location, $maxDistance: 0.00025} }, function(err, signals) {
       if (err) {
@@ -257,42 +183,11 @@ exports.findNear = function(req, res) {
           status: 500
         });
       } else {
-
         res.jsonp(signals);
-
       }
     });
   }
-
 };
-
-
-exports.activitiesAdd = function(req, res){
-  
-  var signal = req.signal;
-
-  if(!signal.acitvities)
-    signal.acitvities = [];
-
-  var activity = _.extend({}, req.body);
-  if(req.user && req.user.id){
-    activity.createdBy = req.user.id;
-  }
-
-  signal.activities.push(activity);
-
-  console.log(signal);
-
-  signal.save(function(err) {
-    if (err) {
-      res.render('error', {
-        status: 500
-      });
-    } else {
-      res.jsonp(signal);
-    }
-  });
-}
 
 
 /**

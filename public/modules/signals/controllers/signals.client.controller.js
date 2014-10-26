@@ -39,27 +39,27 @@ angular.module('signals').controller('SignalsIndexCtrl', ['$scope', 'Signal', fu
     $scope.signals = [];
 
     function reloadSignals() {
-      if (_.isEmpty($scope.params.bounds))
+      if (_.isUndefined($scope.params.neLat)) {
         return;
+      }
 
       Signal.query($scope.params, function(signals) {
+        $scope.markers.length = 0
         _.each(signals, function(sig) {
-          var id = sig._id
-          if ($scope.loadedMarkersRegistry.indexOf(id) > -1) return;
-          $scope.markers.push({
+          var id = sig._id;
+          var marker = {
             id: id,
             options: {
-              animation: google.maps.Animation.DROP
+              animation: google.maps.Animation.DROP,
             },
             icon: '/modules/signals/img/markers/sign.png',
             coords: {
               latitude: sig.location[0],
               longitude: sig.location[1]
             }
-          })
-          $scope.loadedMarkersRegistry.push(id)
+          }
+          $scope.markers.push(marker)
         })
-
         $scope.signals = signals;
       });
     }
@@ -89,8 +89,8 @@ angular.module('signals').controller('SignalsIndexCtrl', ['$scope', 'Signal', fu
   }
 ])
 
-angular.module('signals').controller('SignalsCtrl', ['$scope', 'geolocation', 'GeoIP',
-  function ($scope, geolocation, GeoIP) {
+angular.module('signals').controller('SignalsCtrl', ['$scope', 'geolocation', 'location', 'constants',
+  function ($scope, geolocation, location, constants) {
     $scope.mapIdleHandlers = {};
     $scope.signalTypes = [
       "Улична дупка",
@@ -101,29 +101,29 @@ angular.module('signals').controller('SignalsCtrl', ['$scope', 'geolocation', 'G
     ];
 
     $scope.params = {
-      bounds: "",
       location: "",
       type: "",
       status: ""
     };
 
     $scope.mapIdleHandlers.trackBounds = function(map, eventName, originalEventArgs) {
-      $scope.params.bounds = map.getBounds().toString();
-      var center = map.getCenter();
+      $scope.$apply(function() {
+        var bounds = map.getBounds();
 
-      var coords = {
-        latitude: center.lat(),
-        longitude: center.lng()
-      }
+        $scope.params = {
+          neLat: bounds.getNorthEast().lat(),
+          neLng: bounds.getNorthEast().lng(),
+          swLat: bounds.getSouthWest().lat(),
+          swLng: bounds.getSouthWest().lng()
+        }
+      })
     }
 
-    $scope.signalStatuses = [
-      "отворен",
-      "решен"
-    ];
+    $scope.signalStatuses = {}
+    $scope.signalStatuses[constants.SIGNAL_STATUS.UNCONFIRMED] =  "отворен";
+    $scope.signalStatuses[constants.SIGNAL_STATUS.CLOSED] =  "решен";
 
     $scope.markers = []
-    $scope.loadedMarkersRegistry = [];
 
     $scope.currentMarker = {
       id: "center",
@@ -132,10 +132,11 @@ angular.module('signals').controller('SignalsCtrl', ['$scope', 'geolocation', 'G
       },
       icon: '/modules/signals/img/markers/pin.png',
       coords: {
-        latitude: 42.7,
-        longitude: 23.3
+        latitude: location.latitude,
+        longitude: location.longitude
       }
     }
+
 
     $scope.map = {
       control: {},
@@ -146,8 +147,8 @@ angular.module('signals').controller('SignalsCtrl', ['$scope', 'geolocation', 'G
         minZoom: 3
       },
       center: {
-        latitude: 42.7,
-        longitude: 23.3
+        latitude: location.latitude,
+        longitude: location.longitude
       },
       zoom: 15,
       events: {
@@ -159,20 +160,11 @@ angular.module('signals').controller('SignalsCtrl', ['$scope', 'geolocation', 'G
       }
     };
 
-    // fetch location from server first
-    var location = GeoIP.getLocation();
-
-    location.$promise.then(function(data) {
-      var coords = { latitude: data.latitude, longitude: data.longitude }
-      $scope.map.center = coords;
-      $scope.currentMarker = coords;
-
-      // attempt to fetch more accurate location from browser location services
-      geolocation.getLocation().then(function(data){
-        $scope.map.center = data.coords;
-        $scope.currentMarker.coords = data.coords;
-      });
-    })
+    // attempt to fetch more accurate location from browser location services
+    geolocation.getLocation().then(function(data){
+      $scope.map.center = data.coords;
+      $scope.currentMarker.coords = data.coords;
+    });
 
 
     $scope.autocomplete = {

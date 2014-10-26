@@ -6,6 +6,14 @@ angular.module('signals').config(['$stateProvider',
         url : '/signals',
         templateUrl: 'modules/signals/views/signals.client.view.html',
         controller: 'SignalsCtrl',
+        resolve: {
+          location: ['GeoIP', function(GeoIP) {
+            return GeoIP.getLocation().$promise
+          }],
+          constants: ['Signal', function(Signal) {
+            return Signal.constants().$promise
+          }]
+        }
       })
       .state('signals.index', {
         url : '/',
@@ -19,8 +27,20 @@ angular.module('signals').config(['$stateProvider',
       })
       .state('signals-show', {
         url : '/signals/{signalId}',
-        templateUrl: 'modules/signals/views/signals.show.client.view.html',
-        controller: 'SignalsShowCtrl',
+        views: {
+          '': {
+            templateUrl: 'modules/signals/views/signals.show.client.view.html',
+            controller: 'SignalsShowCtrl',
+          },
+          'assignment@signals-show': {
+            controller: 'SignalAssignmentsCtrl',
+          }
+        },
+        resolve: {
+          signal: ['Signal', '$stateParams', function(Signal, $stateParams) {
+            return Signal.get({ _id: $stateParams.signalId }).$promise;
+          }]
+        }
       })
   }
 ]);
