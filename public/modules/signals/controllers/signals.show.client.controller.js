@@ -34,11 +34,10 @@ angular.module('signals').controller('SignalAssignmentsCtrl', ['$scope', '$state
       $scope.userAssignment.$remove({ signalId: signal._id });
     }
 
-    $scope.$watch('userAssignment', function(value) {
-      if (_.isEmpty(userAssignment) && value.role == null)
-        return;
+    $scope.$watch('userAssignment', function(oldValue, newValue) {
+      if (_.isEqual(oldValue, newValue)) return;
 
-      if (value.role == null) {
+      if (newValue.role == null) {
         unassign();
       }
       else {

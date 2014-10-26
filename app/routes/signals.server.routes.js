@@ -1,6 +1,7 @@
 'use strict';
 
 module.exports = function(app) {
+  var safeguard = require('safeguard');
   var users = require('../../app/controllers/users');
   var signals = require('../../app/controllers/signals');
   var multipart = require('connect-multiparty');
@@ -30,9 +31,22 @@ module.exports = function(app) {
   app.post('/api/signals/:signalId/activities', signals.activities.create);
 
   // Signal assignments
-  app.post('/api/signals/:signalId/assignments',  users.requiresLogin, users.userByIdFromBody, users.requiresSelfOrSuper, signals.assignments.create);
-  app.put('/api/signals/:signalId/assignments/:id',  users.requiresLogin, users.userByIdFromBody, users.requiresSelfOrSuper, signals.assignments.update);
-  app.delete('/api/signals/:signalId/assignments/:id', users.requiresLogin, users.userByIdFromBody, users.requiresSelfOrSuper, signals.assignments.delete);
+  app.post('/api/signals/:signalId/assignments',
+    users.requiresLogin,
+    signals.assignments.populateAssignment,
+    safeguard.enforce(signals.assignments.policy.assign),
+    signals.assignments.create
+  );
+  app.put('/api/signals/:signalId/assignments/:id',
+    users.requiresLogin,
+    signals.assignments.populateAssignment,
+    safeguard.enforce(signals.assignments.policy.assign),
+    signals.assignments.update);
+  app.delete('/api/signals/:signalId/assignments/:id',
+    users.requiresLogin,
+    signals.assignments.populateAssignment,
+    safeguard.enforce(signals.assignments.policy.unassign),
+    signals.assignments.delete);
 
   // Finish by binding the signal middleware
   app.param('signalId', signals.signalByID);

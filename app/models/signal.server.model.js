@@ -78,7 +78,7 @@ SignalSchema.statics = {
     this
       .findOne({_id: id})
       .populate('created_by', 'displayName') // only what we need, not sensitive fields like `salt`
-      .populate('handled_by.user', 'displayName') // only what we need, not sensitive fields like `salt`
+      .populate('assignments.user', 'displayName') // only what we need, not sensitive fields like `salt`
       .exec(cb);
   }
 };

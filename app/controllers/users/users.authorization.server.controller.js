@@ -52,11 +52,3 @@ exports.hasAuthorization = function(roles) {
 		});
 	};
 };
-
-/**
- * User is super or self
- */
-exports.requiresSelfOrSuper = function(req, res, next) {
-  if (req.user.isSuper() || req.user._id.equals(req.targetUser._id)) return next();
-  return res.send(403, 'User is neither super or self');
-}
