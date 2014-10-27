@@ -4,21 +4,11 @@ var mongoose = require('mongoose'),
   SignalAssignment = mongoose.model('SignalAssignment'),
   _ = require('lodash');
 
-var destroyAssignment = function(signal, oldAssignment) {
-  signal.assignments = signal.assignments.filter(function(assignment) {
-    return !assignment.user._id.equals(oldAssignment.user._id)
-  });
-
-  return signal
-}
-
 exports.create = function(req, res, next) {
   var signal = req.signal;
 
   var assignment = new SignalAssignment(req.bodyParams);
   signal.assignments.push(assignment)
-
-  console.log(signal);
 
   signal.save(function(err) {
     if (err) return next(err)
@@ -49,7 +39,6 @@ exports.delete = function(req, res, next) {
 
 exports.populateAssignment = function(req, res, next) {
   // assignment exists get it from signal
-  console.log(req.signal);
   req.assignment = req.signal.findAssignmentById(req.query.id);
 
   if (_.isUndefined(req.assignment)) return res.send(404, 'No such assignment');

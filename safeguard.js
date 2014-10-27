@@ -69,8 +69,4 @@ exports.install = function(name, policy) {
   registry[name] = policy;
 }
 
-exports.policy = function() {
-  return registry;
-}
-
 
