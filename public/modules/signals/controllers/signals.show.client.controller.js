@@ -25,9 +25,10 @@ angular.module('signals').controller('SignalAssignmentsCtrl', ['$scope', '$state
     function clearAssignments(signal) {
       return signal.assignments = _.filter(
         signal.assignments,
-        function(a) {a.user._id == $scope.authentication.user._id}
+        function(a) {a.user._id != $scope.authentication.user._id}
       );
     }
+
     function assign() {
       signal.assignments = clearAssignments(signal);
       signal.assignments.push($scope.userAssignment);
@@ -43,7 +44,7 @@ angular.module('signals').controller('SignalAssignmentsCtrl', ['$scope', '$state
     $scope.userAssignment.user = $scope.authentication.user;
 
     _.each(signal.assignments, function(assignment) {
-        if(assignment.userId ==  $scope.authentication.user._id) {
+        if(assignment.user._id ==  $scope.authentication.user._id) {
             $scope.userAssignment = assignment;
         }
     });
