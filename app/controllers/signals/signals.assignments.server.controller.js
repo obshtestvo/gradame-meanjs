@@ -17,7 +17,7 @@ exports.create = function(req, res, next) {
 };
 
 exports.update = function(req, res, next) {
-  req.signal.destroyAssignment(req.assignment)
+  req.signal.removeAssignment(req.assignment)
 
   var assignment = SignalAssignment(req.bodyParams)
   signal.assignments.push(assignment)

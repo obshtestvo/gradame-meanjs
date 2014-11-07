@@ -20,21 +20,41 @@ angular.module('signals').controller('SignalsShowCtrl', ['$scope', '$stateParams
 
 angular.module('signals').controller('SignalAssignmentsCtrl', ['$scope', '$stateParams', 'SignalAssignment', 'Authentication', 'signal',
   function($scope, $stateParams, SignalAssignment, Authentication, signal) {
-    //var userAssignment = signal.getUserAssignment(Authentication.user._id);
 
-    $scope.userAssignment = new SignalAssignment({})
-
+    //Removes current user assignments
+    function clearAssignments(signal) {
+      return signal.assignments = _.filter(
+        signal.assignments,
+        function(a) {a.userId == $scope.authentication.user._id}
+      );
+    }
     function assign() {
-      $scope.userAssignment.userId = $scope.authentication.user._id;
-      $scope.userAssignment.$save({ signalId: signal._id });
+      signal.assignemnts = clearAssignments(signal);
+      signal.assignments.push($scope.userAssignment);
+      signal.$update();
     }
 
     function unassign() {
-      $scope.userAssignment.userId = $scope.authentication.user._id;
-      $scope.userAssignment.$remove({ signalId: signal._id });
+      signal.assignemnts = clearAssignments(signal);
+      signal.$update();
     }
 
-    $scope.$watch('userAssignment', function(oldValue, newValue) {
+    $scope.userAssignment == null;
+    _.each(signal.assignments, function(assignment) {
+        if(assignment.userId ==  $scope.authentication.user._id) {
+            $scope.userAssignment = assignment;
+        }
+    });
+
+    if($scope.userAssignment == null) {
+      $scope.userAssignment == {
+        userId:  $scope.authentication.user._id,
+        signalId: signal.id
+      };
+    }
+
+    $scope.$watch('userAssignment', function(newValue, oldValue) {
+      if (oldValue == null) return;
       if (_.isEqual(oldValue, newValue)) return;
 
       if (newValue.role == null) {

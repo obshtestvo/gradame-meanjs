@@ -77,6 +77,8 @@ exports.update = function(req, res) {
 
   signal.save(function(err) {
     if (err) {
+      console.log("------------------------------------------");
+      console.log(err);
       res.render('error', {
         status: 500
       });
