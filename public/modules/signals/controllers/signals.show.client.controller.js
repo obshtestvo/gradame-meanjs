@@ -25,33 +25,28 @@ angular.module('signals').controller('SignalAssignmentsCtrl', ['$scope', '$state
     function clearAssignments(signal) {
       return signal.assignments = _.filter(
         signal.assignments,
-        function(a) {a.userId == $scope.authentication.user._id}
+        function(a) {a.user._id == $scope.authentication.user._id}
       );
     }
     function assign() {
-      signal.assignemnts = clearAssignments(signal);
+      signal.assignments = clearAssignments(signal);
       signal.assignments.push($scope.userAssignment);
       signal.$update();
     }
 
     function unassign() {
-      signal.assignemnts = clearAssignments(signal);
+      signal.assignments = clearAssignments(signal);
       signal.$update();
     }
 
-    $scope.userAssignment == null;
+    $scope.userAssignment = $scope.userAssignment ? $scope.userAssignment : {};
+    $scope.userAssignment.user = $scope.authentication.user;
+
     _.each(signal.assignments, function(assignment) {
         if(assignment.userId ==  $scope.authentication.user._id) {
             $scope.userAssignment = assignment;
         }
     });
-
-    if($scope.userAssignment == null) {
-      $scope.userAssignment == {
-        userId:  $scope.authentication.user._id,
-        signalId: signal.id
-      };
-    }
 
     $scope.$watch('userAssignment', function(newValue, oldValue) {
       if (oldValue == null) return;
