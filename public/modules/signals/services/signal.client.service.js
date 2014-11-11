@@ -39,13 +39,6 @@ angular.module('core').factory('Signal', ['$resource', function($resource) {
       headers: { 'Content-Type': undefined },
       transformRequest: imageAppenderTransform
     },
-    activitiesAdd: {
-      method: 'POST',
-      isArray: false,
-      params: {
-        memberRoute: 'activities'
-      }
-    },
     assign: {
       method: 'POST',
       params: {
