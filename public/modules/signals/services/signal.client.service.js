@@ -49,7 +49,13 @@ angular.module('core').factory('Signal', ['$resource', function($resource) {
     assign: {
       method: 'POST',
       params: {
-        memberRoute: 'assignments'
+        memberRoute: 'assign'
+      }
+    },
+    unassign: {
+      method: 'POST',
+      params: {
+        memberRoute: 'unassign'
       }
     },
     findNear: {
@@ -68,16 +74,7 @@ angular.module('core').factory('Signal', ['$resource', function($resource) {
     },
   }
 
-  var Signal = $resource('/api/signals/:collectionRoute:_id/:memberRoute/:userId', { _id: '@_id' }, defaultActions);
-
-  Signal.prototype.getUserAssignment = function(user) {
-    var assignments = _.filter(this.assignments, function(a) { return a.user.id == user.id });
-
-    if (assignments.length > 0)
-      return assignments[0];
-
-    return {};
-  }
+  var Signal = $resource('/api/signals/:collectionRoute:_id/:memberRoute', { _id: '@_id' }, defaultActions);
 
   return Signal
 }]);

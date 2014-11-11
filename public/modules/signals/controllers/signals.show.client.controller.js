@@ -18,26 +18,14 @@ angular.module('signals').controller('SignalsShowCtrl', ['$scope', '$stateParams
   }
 }])
 
-angular.module('signals').controller('SignalAssignmentsCtrl', ['$scope', '$stateParams', 'SignalAssignment', 'Authentication', 'signal',
-  function($scope, $stateParams, SignalAssignment, Authentication, signal) {
-
-    //Removes current user assignments
-    function clearAssignments(signal) {
-      return signal.assignments = _.filter(
-        signal.assignments,
-        function(a) {a.user._id != $scope.authentication.user._id}
-      );
-    }
-
+angular.module('signals').controller('SignalAssignmentsCtrl', ['$scope', '$stateParams', 'SignalAssignment', 'Authentication', 'signal', 'Signal',
+  function($scope, $stateParams, SignalAssignment, Authentication, signal, Signal) {
     function assign() {
-      signal.assignments = clearAssignments(signal);
-      signal.assignments.push($scope.userAssignment);
-      signal.$update();
+      Signal.assign({_id: signal._id}, $scope.userAssignment);
     }
 
     function unassign() {
-      signal.assignments = clearAssignments(signal);
-      signal.$update();
+      Signal.unassign({_id: signal._id}, $scope.userAssignment);
     }
 
     $scope.userAssignment = $scope.userAssignment ? $scope.userAssignment : {};

@@ -104,6 +104,42 @@ exports.delete = function(req, res) {
 };
 
 /**
+ * Assign signal to user
+ */
+exports.assign = function(req, res) {
+  var signal = req.signal;
+
+  signal.assign(req.body.user, req.body.role);
+
+  signal.save(function(err) {
+    if (err) return next(err);
+
+    Signal.load(signal.id, function(err, signal) {
+      if (err) return next(err);
+      res.jsonp(signal);
+    });
+  });
+}
+
+/**
+ * Unassign user from signal
+ */
+exports.unassign = function(req, res) {
+  var signal = req.signal
+
+  signal.unassign(req.body.user);
+
+  signal.save(function(err) {
+    if (err) return next(err)
+
+    Signal.load(signal.id, function(err, signal) {
+      if (err) return next(err);
+      res.jsonp(signal);
+    });
+  })
+}
+
+/**
  * Signal Index
  */
 exports.index = function(req, res) {

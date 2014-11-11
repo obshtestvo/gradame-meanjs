@@ -38,14 +38,8 @@ module.exports = function(app) {
     safeguard.enforce('signal.assignment.create'),
     signals.assignments.create
   );
-  app.put('/api/signals/:signalId/assignments/:id',
-    users.requiresLogin,
-    signals.assignments.populateAssignment,
-    signals.assignments.update);
-  app.delete('/api/signals/:signalId/assignments/:id',
-    users.requiresLogin,
-    signals.assignments.populateAssignment,
-    signals.assignments.delete);
+  app.post('/api/signals/:signalId/assign', signals.assign);
+  app.post('/api/signals/:signalId/unassign', signals.unassign)
 
   // Finish by binding the signal middleware
   app.param('signalId', signals.signalByID);

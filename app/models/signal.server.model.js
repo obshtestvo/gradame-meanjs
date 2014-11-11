@@ -22,7 +22,6 @@ var SignalAssignmentSchemaDefinition = {
 }
 var SignalAssignmentSchema = new Schema(SignalAssignmentSchemaDefinition);
 
-
 /**
  * ActivitySchema Schema - this will always be embedded in Signal document
  * @TODO validation
@@ -103,15 +102,14 @@ SignalSchema.methods.savePhotoFiles = function(files) {
   this.images = images
 };
 
-SignalSchema.methods.removeAssignment = function(assignment) {
-  this.assignments = _.filter(this.assignments, function(asgn) {
-    return !asgn.user._id.equals(assignment.user._id)
-  });
+SignalSchema.methods.assign = function(user, role) {
+  this.unassign(user);
+  this.assignments.push({user: user, role: role})
 }
 
-SignalSchema.methods.findAssignmentById = function(id) {
-  return _.find(this.assignments, function(asgn) {
-    return asgn._id == id
+SignalSchema.methods.unassign = function(user) {
+  this.assignments = _.reject(this.assignments, function(assignment) {
+    return assignment.user._id == user._id
   });
 }
 
