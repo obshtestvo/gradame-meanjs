@@ -3,14 +3,14 @@
     <h3>{{ signal.type }}</h3>
     <div class="timestamp">Подаден на {{ signal.created | date:'dd MMM yyyy HH:mm' }}</div>
     <div class="status btn-group-horizontal" ui-view="status">
-        <div type="label" class="open" ng-model="status.status" btn-radio="1" uncheckable>Отворен.</div>
-        <div type="label" class="assigned" ng-model="status.status" btn-radio="2" uncheckable>Работи се</div>
-        <div type="label" class="resolved" ng-model="status.status" btn-radio="3" uncheckable>Решен</div>
+      <label type="label" class="open" ng-model="status.status" btn-radio="1" uncheckable>Отворен</label>
+      <label type="label" class="assigned" ng-model="status.status" btn-radio="2" uncheckable>Работи се</label>
+      <label type="label" class="resolved" ng-model="status.status" btn-radio="3" uncheckable>Решен</label>
     </div>
     <div class="btn-group-vertical" ui-view="assignment">
-        <label type="label" class="btn btn-primary" ng-model="userAssignment.role" btn-radio="1" uncheckable>Ще помогна да се оправи.</label>
-        <label type="label" class="btn btn-info" ng-model="userAssignment.role" btn-radio="2" uncheckable>Ще помогна това да стигне до когото трябва</label>
-        <label type="label" class="btn btn-default" ng-model="userAssignment.role" btn-radio="3" uncheckable>Аз го направих, признавам</label>
+      <label type="label" class="btn btn-primary" ng-model="userAssignment.role" btn-radio="1" uncheckable>Ще помогна да се оправи.</label>
+      <label type="label" class="btn btn-info" ng-model="userAssignment.role" btn-radio="2" uncheckable>Ще помогна това да стигне до когото трябва</label>
+      <label type="label" class="btn btn-default" ng-model="userAssignment.role" btn-radio="3" uncheckable>Аз го направих, признавам</label>
     </div>
     <div>
       {{ signal.address }}<br>

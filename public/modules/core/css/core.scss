@@ -86,10 +86,6 @@ footer {
   margin-bottom: 25px;
 }
 
-label {
-  display: none;
-}
-
 .btn-success! {}
 
 address {
@@ -144,7 +140,8 @@ $action-block-comment-color: #999999;
       $status-assigned-color: #f2c42e;
       $status-resolved-color: #84ba3b;
       @include clearfix();
-      & > div {
+      & > label {
+        cursor: pointer;
         @extend .pull-left;
         margin-left: -1px;
         width: 33.33%;
