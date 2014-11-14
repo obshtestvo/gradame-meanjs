@@ -38,6 +38,11 @@ var ActivitySchema = new Schema({
   type: Number // see ACTIVITY_TYPE below
 });
 
+var ActivitySchema = new Schema({
+  created_by: { type: Schema.Types.ObjectId, ref: 'User' },
+  templateText: String,
+  type: Number
+});
 /**
  * Signal Schema
  * @TODO validation

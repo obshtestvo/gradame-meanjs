@@ -18,9 +18,9 @@ module.exports = function(app) {
   app.get('/api/signals/mine', signals.mine);
 
   // Signals CRUD
-  app.post('/api/signals', multipartMiddleware, signals.create);
+  app.post('/api/signals', multipartMiddleware, signals.logAction('create'), signals.create);
   app.get('/api/signals/:signalId', signals.read);
-  app.put('/api/signals/:signalId', multipartMiddleware, signals.update);
+  app.put('/api/signals/:signalId', multipartMiddleware, signals.logAction('update'), signals.update);
   app.delete('/api/signals/:signalId', signals.delete);
 
   //app.get('/api/signals/near', signals.findNear);
@@ -28,18 +28,9 @@ module.exports = function(app) {
   // GeoIP location
   app.get('/api/location', signals.location);
 
-  // Signal activities
-  app.post('/api/signals/:signalId/activities', signals.activities.create);
-
   // Signal assignments
-  app.post('/api/signals/:signalId/assignments',
-    users.requiresLogin,
-    signals.assignments.populateAssignment,
-    safeguard.enforce('signal.assignment.create'),
-    signals.assignments.create
-  );
-  app.post('/api/signals/:signalId/assign', signals.assign);
-  app.post('/api/signals/:signalId/unassign', signals.unassign)
+  app.post('/api/signals/:signalId/assign', signals.logAction('assign'), signals.assign);
+  app.post('/api/signals/:signalId/unassign', signals.logAction('unassign'), signals.unassign)
 
   // Finish by binding the signal middleware
   app.param('signalId', signals.signalByID);

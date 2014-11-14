@@ -239,6 +239,14 @@ exports.signalByID = function(req, res, next, id) {
 };
 
 /**
+ * Acitivity log middleware
+ */
+exports.logAction = function(name) {
+  return function(req, res, next) {
+    console.log(name);
+  }
+}
+/**
  * Signal ownership middleware
  */
 exports.hasOwnership = function(req, res, next) {
