@@ -8,7 +8,9 @@ var _ = require('lodash');
 /**
  * Extend user's controller
  */
-module.exports = _.extend(
+module.exports = _.extend({
+    status: require('./signals/signals.status')
+  },
 	require('./signals/signals'),
-	require('./signals/signals.location')
+  require('./signals/signals.location')
 );

@@ -34,6 +34,9 @@ angular.module('signals').config(['$stateProvider',
           },
           'assignment@signals-show': {
             controller: 'SignalAssignmentsCtrl',
+          },
+          'status@signals-show': {
+            controller: 'SignalStatusCtrl',
           }
         },
         resolve: {

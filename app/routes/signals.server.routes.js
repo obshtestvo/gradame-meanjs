@@ -25,12 +25,14 @@ module.exports = function(app) {
 
   //app.get('/api/signals/near', signals.findNear);
 
-  // GeoIP location
   app.get('/api/location', signals.location);
 
   // Signal assignments
   app.post('/api/signals/:signalId/assign', signals.logAction('assign'), signals.assign);
   app.post('/api/signals/:signalId/unassign', signals.logAction('unassign'), signals.unassign)
+
+  // Signal status
+  app.put('/api/signals/:signalId/status', signals.status.update);
 
   // Finish by binding the signal middleware
   app.param('signalId', signals.signalByID);

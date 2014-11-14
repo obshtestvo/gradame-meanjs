@@ -2,10 +2,10 @@
   <div class="col-xs-12 col-sm-4 left-pane">
     <h3>{{ signal.type }}</h3>
     <div class="timestamp">Подаден на {{ signal.created | date:'dd MMM yyyy HH:mm' }}</div>
-    <div class="status">
-      <div class="open" ng-class="(signal.status == 0) ? 'active' : ''">отворен</div>
-      <div class="assigned" ng-class="(signal.status == 1) ? 'active' : ''">работи се</div>
-      <div class="resolved" ng-class="(signal.status == 2) ? 'active' : ''">решен</div>
+    <div class="status btn-group-horizontal" ui-view="status">
+        <div type="label" class="open" ng-model="status.status" btn-radio="1" uncheckable>Отворен.</div>
+        <div type="label" class="assigned" ng-model="status.status" btn-radio="2" uncheckable>Работи се</div>
+        <div type="label" class="resolved" ng-model="status.status" btn-radio="3" uncheckable>Решен</div>
     </div>
     <div class="btn-group-vertical" ui-view="assignment">
         <label type="label" class="btn btn-primary" ng-model="userAssignment.role" btn-radio="1" uncheckable>Ще помогна да се оправи.</label>

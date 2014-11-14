@@ -9,6 +9,30 @@ var mongoose = require('mongoose'),
   _ = require('lodash'),
   Schema = mongoose.Schema;
 
+var constants = {
+  ACTIVITY_TYPE: {
+    COMMENT: 1,
+    STATUS_CHANGE: 2,
+    ASSIGNEE_SWAP: 3,
+    ASSIGNEE_DROP: 4,
+    ASSIGNEE_ADD: 5
+  },
+
+  SIGNAL_STATUS: {
+    UNCONFIRMED: 1,
+    CONFIRMED: 2,
+    INPROGRESS: 3,
+    CLOSED: 4,
+    INVALID: 5
+  },
+
+  ASSIGNMENT_TYPES: {
+    OWNER: 1,
+    MIDDLEMAN: 2,
+    CULPRIT: 3
+  }
+};
+
 /**
  * SignalAssignment Schema - this will always be embedded in Signal document
  * Because different people that have self-assigned a task
@@ -58,7 +82,7 @@ var SignalSchema = new Schema({
   description: String,
   location: { type: [Number], index: '2dsphere' },
   address: String,
-  status: { type: Number, default: 0 },
+  status: { type: Number, default: constants.SIGNAL_STATUS.UNCONFIRMED },
   images: { type: [String] },
   activities: [ ActivitySchema ]
 });
@@ -121,26 +145,4 @@ SignalSchema.methods.unassign = function(user) {
 mongoose.model('Signal', SignalSchema);
 mongoose.model('SignalAssignment', SignalAssignmentSchema);
 
-exports.constants = {
-  ACTIVITY_TYPE: {
-    COMMENT: 1,
-    STATUS_CHANGE: 2,
-    ASSIGNEE_SWAP: 3,
-    ASSIGNEE_DROP: 4,
-    ASSIGNEE_ADD: 5
-  },
-
-  SIGNAL_STATUS: {
-    UNCONFIRMED: 1,
-    CONFIRMED: 2,
-    INPROGRESS: 3,
-    CLOSED: 4,
-    INVALID: 5
-  },
-
-  ASSIGNMENT_TYPES: {
-    OWNER: 1,
-    MIDDLEMAN: 2,
-    CULPRIT: 3
-  }
-}
+exports.constants = constants;

@@ -50,3 +50,14 @@ angular.module('signals').controller('SignalAssignmentsCtrl', ['$scope', '$state
     }, true);
   }
 ])
+
+angular.module('signals').controller('SignalStatusCtrl', ['$scope', '$stateParams', 'signal', 'SignalStatus',
+  function($scope, $stateParams, signal, SignalStatus) {
+    $scope.status = {
+        status: signal.status
+    };
+    $scope.$watch('status.status', function(newValue, oldValue) {
+      SignalStatus.update({signalId: signal._id}, $scope.status);
+    });
+  }
+])
